@@ -1,15 +1,15 @@
-import { Response } from "express";
-import httpStatus from "./http-status";
+import { Response } from 'express';
+import httpStatus from './http-status';
 
 type TResponseData = {
-  status_code: number;
+  statusCode: number;
   message: string;
   data: any;
   meta?: TMeta;
 };
 
 type TErrorResponse = {
-  status_code: number;
+  statusCode: number;
   message: string;
 };
 
@@ -17,7 +17,7 @@ export type TMeta = {
   page: number;
   limit: number;
   pages?: number[];
-  total_results: number;
+  totalResults: number;
   total?: number;
 };
 
@@ -25,9 +25,9 @@ export const sendSuccessResponse = (
   res: Response,
   responseData: TResponseData,
 ) => {
-  res.status(responseData.status_code).json({
+  res.status(responseData.statusCode).json({
     success: true,
-    statusCode: responseData.status_code,
+    statusCode: responseData.statusCode,
     message: responseData.message,
     data: responseData.data,
     meta: responseData.meta,
@@ -38,9 +38,9 @@ export const sendErrorResponse = (
   res: Response,
   responseData: TErrorResponse,
 ) => {
-  res.status(responseData.status_code).json({
+  res.status(responseData.statusCode).json({
     success: false,
-    statusCode: responseData.status_code,
+    statusCode: responseData.statusCode,
     message: responseData.message,
   });
 };
@@ -49,7 +49,7 @@ export const sendDataNotFoundResponse = (res: Response) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
     statusCode: 404,
-    message: "No Data Found",
+    message: 'No Data Found',
     data: [],
   });
 };
@@ -58,6 +58,6 @@ export const sendNoAccessResponse = (res: Response) => {
   res.status(httpStatus.UNAUTHORIZED).json({
     success: false,
     statusCode: 401,
-    message: "You have no access to this route",
+    message: 'You have no access to this route',
   });
 };

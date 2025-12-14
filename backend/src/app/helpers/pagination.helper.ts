@@ -1,11 +1,10 @@
-import { PaginationOptions } from "../lib/types";
-import { PAGINATION_OPTION_KEYS } from "../lib/constant";
-import { pick } from "../lib/pick";
-
+import { PaginationOptions } from '../types';
+import { PAGINATION_OPTION_KEYS } from '../lib/constant';
+import { pick } from '../lib/pick';
 
 export enum ESortOrder {
-  ASC = "asc",
-  DESC = "desc",
+  ASC = 'asc',
+  DESC = 'desc',
 }
 
 interface IOptionsResult {
@@ -35,7 +34,7 @@ export const calculatePagination = (
     Number(paginationOptions.limit) ||
     options?.limitOverride ||
     options?.defaultLimit ||
-    16;
+    10;
 
   const isValidSortOrder = Object.values(ESortOrder).includes(
     paginationOptions.sortOrder as ESortOrder,
@@ -45,7 +44,7 @@ export const calculatePagination = (
     : options?.defaultSortOrder || ESortOrder.DESC;
 
   let sortBy: string =
-    paginationOptions.sortBy || options?.defaultSortBy || "created_at";
+    paginationOptions.sortBy || options?.defaultSortBy || 'createdAt';
 
   const skip = (page - 1) * limit;
 

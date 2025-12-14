@@ -1,11 +1,8 @@
-
-
-
 export type TEnvironment = `${EEnvironment}`;
 
 export enum EEnvironment {
-  Development = "DEVELOPMENT",
-  Production = "PRODUCTION",
+  Development = 'DEVELOPMENT',
+  Production = 'PRODUCTION',
 }
 
 export interface PaginationOptions {
@@ -13,4 +10,8 @@ export interface PaginationOptions {
   limit?: number;
   sortBy?: string | undefined;
   sortOrder?: string;
+}
+
+export interface AuthUser {
+  id: string;
 }

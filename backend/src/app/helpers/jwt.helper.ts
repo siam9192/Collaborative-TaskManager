@@ -1,10 +1,7 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import { de } from 'zod/v4/locales';
 
-export const generateJwtToken = (
-  payload: any,
-  secret: string,
-  expiresIn: string,
-) => {
+const generateToken = (payload: any, secret: string, expiresIn: string) => {
   const token = jwt.sign(payload, secret, {
     expiresIn: expiresIn as any,
   });
@@ -12,6 +9,13 @@ export const generateJwtToken = (
   return token;
 };
 
-export const verifyJwtToken = (token: string, secret: string) => {
+const verifyToken = (token: string, secret: string) => {
   return jwt.verify(token, secret) as any;
 };
+
+const jwtHelper = {
+  generateToken,
+  verifyToken,
+};
+
+export default jwtHelper;

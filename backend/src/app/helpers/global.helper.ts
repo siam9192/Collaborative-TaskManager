@@ -1,6 +1,6 @@
-import httpStatus from "../lib/http-status";
-import AppError from "../lib/AppError";
-import { GLOBAL_ERROR_MESSAGE } from "../lib/constant";
+import httpStatus from '../lib/http-status';
+import AppError from '../lib/AppError';
+import { GLOBAL_ERROR_MESSAGE } from '../lib/constant';
 
 export function isNumber(value: string) {
   return !isNaN(parseInt(value));

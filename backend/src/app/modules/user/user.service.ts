@@ -6,23 +6,17 @@ import { prisma } from '../../prisma';
 import {
   CreateUserPayload,
   UpdateUserProfilePayload,
-  VisibleUsersFilterQuery,
+  UsersFilterQuery,
+  
 } from './user.interface';
-import { Prisma } from '@prisma/client';
+
 import { calculatePagination } from '../../helpers/pagination.helper';
+import userRepository from './user.repository';
 
 class UserService {
-  private userDefaultSelect = {
-    id: true,
-    name: true,
-    profilePhoto: true,
-    gender: true,
-    email: true,
-    createdAt: true,
-    updatedAt: true,
-  };
 
-  async createUserIntoDB(payload: CreateUserPayload) {
+
+  async createUser(payload: CreateUserPayload) {
     const userExistByEmail = await prisma.user.findUnique({
       where: {
         email: payload.email,
@@ -50,102 +44,75 @@ class UserService {
       );
 
     // Insert user
-    const createdUser = await prisma.user.create({
-      data: {
-        ...payload,
-        password: bcryptHelper.hash(payload.password),
-      },
-      select: this.userDefaultSelect,
-    });
+    const createdUser = await  userRepository.create({
+      ...payload,
+      password:bcryptHelper.hash(payload.password)
+    },{
+        select:{
+        id:true,
+        name:true,
+        profilePhoto:true,
+        gender:true,
+        status:true,
+        createdAt:true,
+        updatedAt:true,
+        isActive:true
+      }
+    })
 
     if (!createdUser) throw new Error();
 
     return createdUser;
   }
 
-  async getCurrentUserFromDB(authUser: AuthUser) {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: authUser.id,
-      },
-      select: this.userDefaultSelect,
-    });
 
+
+  async getCurrentUserFromDB(authUser: AuthUser) {
+    const user =  await userRepository.findById(authUser.id,{
+      select:{
+        id:true,
+        name:true,
+        profilePhoto:true,
+        gender:true,
+        status:true,
+        createdAt:true,
+        updatedAt:true,
+        isActive:true
+      }
+    })
     // Check user existence
     if (!user) throw new AppError(httpStatus.NOT_FOUND, 'User not found');
     return user;
   }
 
-  async updateUserProfileIntoDB(
+  async updateUserProfile(
     authUser: AuthUser,
     payload: UpdateUserProfilePayload,
   ) {
-    return await prisma.user.update({
-      where: {
-        id: authUser.id,
-      },
-      select: this.userDefaultSelect,
-      data: payload,
-    });
+    return await userRepository.updateById(authUser.id,payload,{
+        select:{
+        id:true,
+        name:true,
+        profilePhoto:true,
+        gender:true,
+        status:true,
+        createdAt:true,
+        updatedAt:true,
+        isActive:true
+      }
+    })
   }
 
   async getVisibleUsersFromDB(
     authUser: AuthUser,
-    filterQuery: VisibleUsersFilterQuery,
+    filterQuery:UsersFilterQuery ,
     paginationOptions: PaginationOptions,
   ) {
-    const { searchTerm } = filterQuery;
-    const { page, limit, skip, sortBy, sortOrder } =
-      calculatePagination(paginationOptions);
-
-    const andConditions: Prisma.UserWhereInput[] = [
-      {
-        id: {
-          not: authUser.id,
-        },
-      },
-    ];
-
-    // Filter by email or username on searchTerm  existence
-    if (searchTerm?.trim().length) {
-      andConditions.push({
-        OR: [
-          {
-            email: searchTerm,
-          },
-          {
-            username: searchTerm,
-          },
-        ],
-      });
-    }
-
-    const whereConditions: Prisma.UserWhereInput = {
-      AND: andConditions,
-    };
-
-    const users = await prisma.user.findMany({
-      where: whereConditions,
-      orderBy: {
-        [sortBy]: sortOrder,
-      },
-      take: limit,
-      skip,
-      select: this.userDefaultSelect,
-    });
-
-    const totalResults = prisma.user.count();
-
-    const meta = {
-      page,
-      limit,
-      totalResults,
-    };
-
-    return {
-      data: users,
-      meta,
-    };
+     return await userRepository.findVisibleUsers(
+          authUser.id,
+          filterQuery,
+          calculatePagination(paginationOptions)
+     );
   }
 }
 

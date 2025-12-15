@@ -13,6 +13,6 @@ export type UpdateUserProfilePayload = Partial<{
   gender: Gender;
 }>;
 
-export type VisibleUsersFilterQuery = {
+export type UsersFilterQuery = {
   searchTerm?: string;
 };

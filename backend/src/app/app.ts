@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import routes from './lib/routes';
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
 const app = express();
 
 //Middlewares
@@ -14,8 +14,7 @@ app.use(
   }),
 );
 
-app.use(cookieParser())
-
+app.use(cookieParser());
 
 //  Routes
 app.get('/', (_req: Request, res: Response) => {

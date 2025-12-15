@@ -1,3 +1,5 @@
+import { ESortOrder } from '../helpers/pagination.helper';
+
 export type TEnvironment = `${EEnvironment}`;
 
 export enum EEnvironment {
@@ -14,4 +16,16 @@ export interface PaginationOptions {
 
 export interface AuthUser {
   id: string;
+}
+
+export interface PaginationData {
+  page: number;
+  limit: number;
+  skip: number;
+  sortOrder: ESortOrder;
+  sortBy: string;
+}
+
+export interface FilterQuery {
+  [key: string]: string | number;
 }

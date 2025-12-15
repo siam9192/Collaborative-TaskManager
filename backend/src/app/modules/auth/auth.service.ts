@@ -15,7 +15,7 @@ import { AuthUser } from '../../types';
 
 class AuthService {
   async register(payload: UserRegistrationPayload) {
-    const user = await userService.createUserIntoDB(payload);
+    const user = await userService.createUser(payload);
     return user;
   }
 

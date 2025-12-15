@@ -9,7 +9,7 @@ const moduleRoutes: TModuleRoutes = [
     path: '/auth',
     router: authRouter,
   },
-   {
+  {
     path: '/users',
     router: userRouter,
   },

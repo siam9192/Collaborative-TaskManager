@@ -19,18 +19,17 @@ class AuthController {
     const result = await authService.login(req.user);
     res.cookie('accessToken', result.accessToken, {
       httpOnly: true,
-      secure: envConfig.environment?.toLocaleLowerCase() === 'production', 
-      sameSite: 'strict', 
-      maxAge: parse(envConfig.jwt.access_token_expire as string) as number, 
+      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
+      sameSite: 'strict',
+      maxAge: parse(envConfig.jwt.access_token_expire as string) as number,
     });
 
-     res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true, 
-      secure: envConfig.environment?.toLocaleLowerCase() === 'production', 
-      sameSite: 'strict', 
-      maxAge: parse(envConfig.jwt.refresh_token_expire as string) as number, 
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
+      sameSite: 'strict',
+      maxAge: parse(envConfig.jwt.refresh_token_expire as string) as number,
     });
-
 
     sendSuccessResponse(res, {
       message: 'Login successful',
@@ -39,22 +38,21 @@ class AuthController {
     });
   });
 
-  changePassword =  catchAsync(async (req, res) => {
-    const result = await authService.changePassword(req.user,req.body);
+  changePassword = catchAsync(async (req, res) => {
+    const result = await authService.changePassword(req.user, req.body);
     res.cookie('accessToken', result.accessToken, {
-      httpOnly: true, 
-      secure: envConfig.environment?.toLocaleLowerCase() === 'production', 
-      sameSite: 'strict',
-      maxAge: parse(envConfig.jwt.access_token_expire as string) as number, 
-    });
-
-     res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true, 
+      httpOnly: true,
       secure: envConfig.environment?.toLocaleLowerCase() === 'production',
-      sameSite: 'strict', 
-      maxAge: parse(envConfig.jwt.refresh_token_expire as string) as number, 
+      sameSite: 'strict',
+      maxAge: parse(envConfig.jwt.access_token_expire as string) as number,
     });
 
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
+      sameSite: 'strict',
+      maxAge: parse(envConfig.jwt.refresh_token_expire as string) as number,
+    });
 
     sendSuccessResponse(res, {
       message: 'Password changed successfully',
@@ -63,14 +61,14 @@ class AuthController {
     });
   });
 
- getNewAccessToken =  catchAsync(async (req, res) => {
-    const refreshToken = req.cookies?.refreshToken
+  getNewAccessToken = catchAsync(async (req, res) => {
+    const refreshToken = req.cookies?.refreshToken;
     const result = await authService.getNewAccessToken(refreshToken);
     res.cookie('accessToken', result.accessToken, {
-      httpOnly: true, 
-      secure: envConfig.environment?.toLocaleLowerCase() === 'production', 
+      httpOnly: true,
+      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
       sameSite: 'strict',
-      maxAge: parse(envConfig.jwt.access_token_expire as string) as number, 
+      maxAge: parse(envConfig.jwt.access_token_expire as string) as number,
     });
 
     sendSuccessResponse(res, {

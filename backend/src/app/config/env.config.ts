@@ -12,7 +12,8 @@ const envConfig = {
   jwt: {
     access_token_secret: process.env.JWT_ACCESS_TOKEN_SECRET,
     refresh_token_secret: process.env.JWT_REFRESH_TOKEN_SECRET,
-    otp_verification_token_secret: process.env.OTP_VERIFICATION_TOKEN_SECRET,
+    access_token_expire: process.env.JWT_ACCESS_TOKEN_EXPIRE,
+    refresh_token_expire: process.env.JWT_REFRESH_TOKEN_EXPIRE,
   },
 };
 

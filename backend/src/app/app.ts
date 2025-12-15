@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import routes from './lib/routes';
-
+import cookieParser from 'cookie-parser'
 const app = express();
 
 //Middlewares
@@ -13,6 +13,9 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(cookieParser())
+
 
 //  Routes
 app.get('/', (_req: Request, res: Response) => {
@@ -26,7 +29,6 @@ app.use('/api', routes);
 
 // Route not found Handler
 app.use((req: Request, res: Response) => {
-  console.log(111);
   res.status(404).json({
     success: false,
     statusCode: 404,

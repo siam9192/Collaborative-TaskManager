@@ -17,6 +17,7 @@ model User {
   email        String   @unique
   password     String
   status UserAccountStatus @default(Active)
+  passwordLastChangedAt DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

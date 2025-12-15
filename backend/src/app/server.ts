@@ -1,7 +1,6 @@
 import { createServer } from 'node:http';
 import app from './app';
 import { initSocket } from './socket';
-import { getIO } from './socket/socketStore';
 
 async function main() {
   try {

@@ -78,12 +78,12 @@ model Notification {
 model ActiveSession {
   id        String   @id @default(cuid())
   userId    String
-  socketId  String
+  socketId  String @unique
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id],onDelete: Cascade)
 
-  @@unique([userId, socketId])
+ 
   @@map("active_sessions")
 }
 
@@ -100,7 +100,7 @@ model TaskStatusAuditLog {
 
   createdAt   DateTime @default(now())
 
-  task        Task     @relation(fields: [taskId], references: [id])
+  task        Task     @relation(fields: [taskId], references: [id],onDelete: Cascade)
 
   @@index([taskId])
   @@index([changedById])
@@ -140,8 +140,6 @@ enum Gender {
 enum NotificationCategory {
   Task
   System
-  Message
-  Reminder
 }
 
 enum NotificationType {

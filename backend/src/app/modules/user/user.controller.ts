@@ -3,7 +3,6 @@ import catchAsync from '../../lib/catchAsync';
 import httpStatus from '../../lib/http-status';
 import { pick } from '../../lib/pick';
 import { sendSuccessResponse } from '../../lib/response';
-import { VisibleUsersFilterQuery } from './user.interface';
 import userService from './user.service';
 
 class UserController {

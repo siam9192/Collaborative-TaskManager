@@ -1,6 +1,8 @@
 import { IRouter, Router } from 'express';
 import userRouter from '../modules/user/user.route';
 import authRouter from '../modules/auth/auth.router';
+import taskRouter from '../modules/task/task.route';
+import notificationRouter from '../modules/notification/notification.route';
 
 type TModuleRoutes = { path: string; router: IRouter }[];
 const router = Router();
@@ -13,6 +15,14 @@ const moduleRoutes: TModuleRoutes = [
     path: '/users',
     router: userRouter,
   },
+   {
+    path: '/tasks',
+    router: taskRouter,
+  },
+  {
+    path:'/notifications',
+    router:notificationRouter
+  }
 ];
 
 const routes = moduleRoutes.map((route) =>

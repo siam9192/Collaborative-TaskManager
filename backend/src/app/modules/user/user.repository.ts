@@ -66,7 +66,7 @@ class UserRepository {
 
 
 
- async isUserExist (id:string) {
+ async isUserExistById (id:string) {
     const user = await this.user.findUnique({
         where:{
             id

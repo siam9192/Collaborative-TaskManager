@@ -12,6 +12,7 @@ import AppError from '../../lib/AppError';
 import httpStatus from '../../lib/http-status';
 import bcryptHelper from '../../helpers/bycrypt.helper';
 import { AuthUser } from '../../types';
+import userRepository from '../user/user.repository';
 
 class AuthService {
   async register(payload: UserRegistrationPayload) {
@@ -88,16 +89,12 @@ class AuthService {
     }
     // Hash the new password
     const newEncryptedPassword = bcryptHelper.hash(payload.newPassword);
-
-    await prisma.user.update({
-      where: {
-        id: authUser.id,
-      },
-      data: {
+  
+    // Update user password and passwordLastChangedAt
+    await userRepository.updateById(authUser.id ,{
         password: newEncryptedPassword,
-        passwordLastChangedAt: new Date(),
-      },
-    });
+        passwordLastChangedAt: new Date()
+      })
 
     const tokenPayload = {
       id: user.id,
@@ -173,6 +170,7 @@ class AuthService {
       );
     }
   }
+  
 }
 
 export default new AuthService();

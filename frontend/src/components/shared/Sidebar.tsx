@@ -2,41 +2,40 @@
 import {
   Home,
   ListChecks,
-  ClipboardList,
-  AlertTriangle,
-  Users,
   Settings,
   LogOut,
+  User,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
   const menuItems = [
     { label: "Home", icon: Home, path: "/" },
-    { label: "My Tasks", icon: ListChecks, path: "/tasks" },
-    { label: "Assigned", icon: ClipboardList, path: "/tasks/assigned" },
-    { label: "Overdue", icon: AlertTriangle, path: "/tasks/overdue" },
-    { label: "Teams", icon: Users, path: "/teams" },
+    { label: "Tasks", icon: ListChecks, path: "/tasks" },
+    { label: "Edit Profile", icon: User, path: "/edit-profile" },
+    // { label: "Overdue", icon: AlertTriangle, path: "/tasks/overdue" },
+    // { label: "Teams", icon: Users, path: "/teams" },
   ];
 
   return (
-    <aside className="bg-base-200 border-r border-base-300 flex flex-col h-full">
+    <aside className=" bg-base-100 dark:bg-base-200 border-r border-base-300 flex flex-col h-full">
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-base-300">
+      <div className="p-3 border-b border-base-300">
         <h2 className="text-lg font-semibold">Welcome 👋</h2>
         <p className="text-sm opacity-70">Task Dashboard</p>
       </div>
 
       {/* Menu */}
       <div className="flex-1 overflow-y-auto p-2">
-        <ul className="menu menu-md bg-base-200 rounded-box w-full">
+        <ul className="menu menu-md w-full">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
               <li key={item.label}>
-                <a className="flex items-center gap-3">
+                <Link to={item.path} className="flex items-center gap-3">
                   <Icon size={18} />
                   <span>{item.label}</span>
-                </a>
+                </Link>
               </li>
             );
           })}

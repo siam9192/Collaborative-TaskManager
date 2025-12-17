@@ -5,20 +5,26 @@ import Header from '../shared/Header'
 
 function DashboardLayout() {
   return (
-     <div>
-        <div className=' h-screen
-        flex  overflow-hidden'>
-          <div className=' max-w-64 h-full hidden lg:block'>
-           <Sidebar/>
-          </div>
+    <div className="flex min-h-screen lg:h-screen">
+      {/* Sidebar */}
+      <aside className="hidden lg:block lg:w-64 h-full sticky top-0 bg-base-200 border-r border-base-300">
+        <Sidebar />
+      </aside>
 
-          <div className='lg:grow h-full'>
-            <Header/>
-          <Outlet/>
-          </div>
-        </div>
+      {/* Main content */}
+      <div className="flex flex-col flex-1 h-full">
+        {/* Header */}
+        <Header />
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto p-6 ">
+          <Outlet />
+        </main>
+      </div>
     </div>
-  )
+  );
 }
+
+
 
 export default DashboardLayout

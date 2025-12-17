@@ -6,12 +6,14 @@ import LoginPage from '../components/pages/LoginPage'
 import SignupPage from '../components/pages/SignupPage'
 import IntroPage from '../components/pages/IntroPage'
 import DashboardLayout from '../components/layout/DashboardLayout'
+import TasksPage from '../components/pages/TasksPage'
 
 function Router() {
   return  <BrowserRouter>
       <Routes>
         {/* Parent layout route */}
         <Route path="/" element={<App />}>
+
           {/* Nested route (index) */}
           <Route
             element={
@@ -22,7 +24,7 @@ function Router() {
           >
             <Route index element={<HomePage />} />
      
-          
+            <Route path='tasks' element={<TasksPage />} />
           </Route>
 
           {/* Auth routes */}

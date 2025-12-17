@@ -5,7 +5,7 @@ import { MessageCircle } from "lucide-react";
 
 function Header() {
   return (
-    <header className="bg-base-200 py-2  ">
+    <header className="bg-base-100  dark:bg-base-200 py-2  ">
       
         <div className="p-2 md:p-3 flex justify-between items-center">
            <SidebarModal/>

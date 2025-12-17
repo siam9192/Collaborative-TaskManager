@@ -8,10 +8,7 @@ import {
 } from './notification.interface';
 import notificationRepository from './notification.repository';
 import { calculatePagination } from '../../helpers/pagination.helper';
-import {
-  getIO,
-  getUsersSocketIds,
-} from '../../socket/socketStore';
+import { getIO, getUsersSocketIds } from '../../socket/socketStore';
 
 class NotificationService {
   async createNotification(payload: CreateNotificationPayload) {

@@ -1,4 +1,4 @@
-import { Prisma, Task } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../prisma';
 import { FilterQuery, PaginationData } from '../../types';
 import { TaskFilterQuery } from './task.interface';

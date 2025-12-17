@@ -1,10 +1,8 @@
 import { ESortOrder } from '../helpers/pagination.helper';
 
-export type TEnvironment = `${EEnvironment}`;
-
-export enum EEnvironment {
-  Development = 'DEVELOPMENT',
-  Production = 'PRODUCTION',
+export enum Environment {
+  Development = 'Development',
+  Production = 'Production',
 }
 
 export interface PaginationOptions {

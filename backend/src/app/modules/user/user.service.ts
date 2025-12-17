@@ -14,25 +14,13 @@ import userRepository from './user.repository';
 
 class UserService {
   async createUser(payload: CreateUserPayload) {
-    const userExistByEmail = await prisma.user.findUnique({
-      where: {
-        email: payload.email,
-      },
-      select: {
-        id: true,
-      },
-    });
+    const userExistByEmail = await userRepository.isExistByEmail(payload.email);
 
     if (userExistByEmail)
       throw new AppError(httpStatus.FORBIDDEN, 'This email already used');
-    const userExistByUsername = await prisma.user.findUnique({
-      where: {
-        username: payload.username,
-      },
-      select: {
-        id: true,
-      },
-    });
+    const userExistByUsername = await userRepository.isExistByUsername(
+      payload.username,
+    );
 
     if (userExistByUsername)
       throw new AppError(

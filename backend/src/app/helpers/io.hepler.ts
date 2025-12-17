@@ -1,12 +1,11 @@
 import {
   getIO,
-  getUserSocketIds,
   getUsersSocketIds,
 } from '../socket/socketStore';
 
-const io = getIO();
-
 export function emitToUsers(userIds: string[], event: string, data: any) {
+  const io = getIO();
+
   if (!userIds || userIds.length === 0) return;
 
   const socketIds = getUsersSocketIds(userIds);
@@ -16,6 +15,8 @@ export function emitToUsers(userIds: string[], event: string, data: any) {
   }
 }
 export function emitToUser(userId: string, event: string, data: any) {
+  const io = getIO();
+
   if (!userId) return;
 
   const socketIds = getUsersSocketIds([userId]);

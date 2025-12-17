@@ -52,6 +52,7 @@ export function getAllConnectedUsers(): ConnectedUser[] {
 }
 
 export const setIO = (ioInstance: Server) => {
+  console.log(io);
   io = ioInstance;
 };
 

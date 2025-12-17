@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { prisma } from '../../prisma';
 import { UsersFilterQuery } from './user.interface';
 import { FilterQuery, PaginationData } from '../../types';
@@ -54,7 +54,7 @@ class UserRepository {
   }
 
   async create(
-    data: Prisma.UserCreateInput,
+    data: Prisma.UserUncheckedCreateInput,
     options: { include?: Prisma.UserInclude; select?: Prisma.UserSelect } = {},
   ) {
     return await this.user.create({ data, ...options });
@@ -72,6 +72,25 @@ class UserRepository {
     const user = await this.user.findUnique({
       where: {
         id,
+      },
+      select: null,
+    });
+    return !!user;
+  }
+  async isExistByEmail(email: string) {
+    const user = await this.user.findUnique({
+      where: {
+        email,
+      },
+      select: null,
+    });
+    return !!user;
+  }
+
+  async isExistByUsername(username: string) {
+    const user = await this.user.findUnique({
+      where: {
+        username,
       },
       select: null,
     });

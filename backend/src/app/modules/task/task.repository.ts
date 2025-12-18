@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, TaskStatus } from '@prisma/client';
 import { prisma } from '../../prisma';
 import { FilterQuery, PaginationData } from '../../types';
 import { TaskFilterQuery } from './task.interface';
@@ -185,7 +185,7 @@ class TaskRepository {
   ) {
     const { page, skip, limit } = paginationData;
 
-    const where = {
+    const where:Prisma.TaskWhereInput = {
       ...this.buildTasksWhere({
         ...filterQuery,
         assignedToId: userId,
@@ -200,8 +200,11 @@ class TaskRepository {
         },
       ],
       dueDate: {
-        gte: new Date(),
+      lt:new Date()
       },
+      status:{
+        not:TaskStatus.Completed
+      }
     };
     const data = await this.task.findMany({
       where: where,

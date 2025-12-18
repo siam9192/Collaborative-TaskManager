@@ -8,6 +8,7 @@ import notificationService from '../notification/notification.service';
 import taskService from './task.service';
 import { emitToUser, emitToUsers } from '../../helpers/io.hepler';
 import { TaskEvent } from '../../types';
+import { emitTaskEvent, notifyUser } from '../../helpers/utils.helper';
 
 class TaskController {
   createTask = catchAsync(async (req, res) => {
@@ -57,70 +58,61 @@ class TaskController {
 7  emit task:updated
    ↓
 8  HTTP response */
+updateTask = catchAsync(async (req, res) => {
+  const { user: authUser, body, params } = req;
 
-  updateTask = catchAsync(async (req, res) => {
-    const { user: authUser, body, params } = req;
+  const { data, assigned } = await taskService.updateTask(
+    authUser,
+    params.id,
+    body,
+  );
 
-    const { data, assigned } = await taskService.updateTask(
-      authUser,
-      params.id,
-      body,
+  const taskMeta = { id: data.id, title: data.title };
+
+  // 1️⃣ Handle assignment changes
+  if (assigned?.from) {
+    notifyUser(
+      assigned.from,
+      taskMeta,
+      "Task Unassigned",
+      `You have been unassigned from task: ${data.title}`,
+      NotificationCategory.TASK_UNASSIGNED,
     );
 
-    const notify = (
-      userId: string,
-      title: string,
-      message: string,
-      category: NotificationCategory,
-    ) => {
-      notificationService.instantNotifyToUsers([userId], {
-        title,
-        message,
-        category,
-        type: NotificationType.Info,
-        entityId: data.id,
-      });
-    };
+    emitTaskEvent(assigned.from, TaskEvent.UNASSIGNED, data.id);
+  }
 
-    // Assignment changes
-    if (assigned?.from) {
-      notify(
-        assigned.from,
-        'Task Unassigned',
-        `You have been unassigned from task: ${data.title}`,
-        NotificationCategory.TASK_UNASSIGNED,
-      );
-
-      emitToUser(assigned.from, TaskEvent.UNASSIGNED, { id: data.id });
-    }
-
-    if (assigned?.to) {
-      notify(
-        assigned.to,
-        'New Task Assigned',
-        `You have been assigned a task: ${data.title}`,
-        NotificationCategory.TASK_ASSIGNED,
-      );
-
-      emitToUser(assigned.to, TaskEvent.ASSIGNED, { id: data.id });
-    }
-
-    // Emit task updated event to creator and if assignment no changes  then assigned user also
-    emitToUsers(
-      (assigned
-        ? [data.creatorId]
-        : [data.creatorId, data.assignedToId]
-      ).filter((_) => _ !== null),
-      TaskEvent.UPDATED,
-      { id: data.id },
+  if (assigned?.to) {
+    notifyUser(
+      assigned.to,
+      taskMeta,
+      "New Task Assigned",
+      `You have been assigned a task: ${data.title}`,
+      NotificationCategory.TASK_ASSIGNED,
     );
 
-    sendSuccessResponse(res, {
-      message: 'Task updated successfully',
-      statusCode: httpStatus.OK,
-      data,
-    });
+    emitTaskEvent(assigned.to, TaskEvent.ASSIGNED, data.id);
+  }
+
+  // 2️⃣ Emit task updated
+  const recipients = new Set<string>();
+
+  recipients.add(data.creatorId);
+
+  if (!assigned && data.assignedToId) {
+    recipients.add(data.assignedToId);
+  }
+
+  emitToUsers([...recipients], TaskEvent.UPDATED, { id: data.id });
+
+  // 3️⃣ Response
+  sendSuccessResponse(res, {
+    message: "Task updated successfully",
+    statusCode: httpStatus.OK,
+    data,
   });
+});
+
 
   deleteTask = catchAsync(async (req, res) => {
     const { data } = await taskService.deleteTask(req.user, req.params.id);
@@ -136,7 +128,7 @@ class TaskController {
     sendSuccessResponse(res, {
       message: 'Task deleted  successfully',
       statusCode: httpStatus.OK,
-      data:null,
+      data: null,
     });
   });
 
@@ -149,7 +141,7 @@ class TaskController {
     sendSuccessResponse(res, {
       message: 'Assigned tasks retrieved   successfully',
       statusCode: httpStatus.OK,
-    ...result,
+      ...result,
     });
   });
 
@@ -162,12 +154,12 @@ class TaskController {
     sendSuccessResponse(res, {
       message: 'Created tasks retrieved   successfully',
       statusCode: httpStatus.OK,
-     ...result,
+      ...result,
     });
   });
 
   getOverdueTasks = catchAsync(async (req, res) => {
-    const result = await taskService.getCreatedTasks(
+    const result = await taskService.getOverDueTasks(
       req.user,
       pick(req.query, ['searchTerm', 'status', 'priority']),
       paginationOptionPicker(req.query),
@@ -175,7 +167,7 @@ class TaskController {
     sendSuccessResponse(res, {
       message: 'Overdue tasks retrieved   successfully',
       statusCode: httpStatus.OK,
-    ...result,
+      ...result,
     });
   });
 }

@@ -1,9 +1,7 @@
-import { paginationOptionPicker } from '../../helpers/pagination.helper';
 import catchAsync from '../../lib/catchAsync';
 import httpStatus from '../../lib/http-status';
 import { sendSuccessResponse } from '../../lib/response';
 import metaDataService from './metadata.service';
-
 
 class MetadataController {
   getUserGlobalMetadata = catchAsync(async (req, res) => {

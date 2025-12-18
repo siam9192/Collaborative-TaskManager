@@ -1,5 +1,6 @@
 import { calculatePagination } from '../../helpers/pagination.helper';
 import AppError from '../../lib/AppError';
+import { getAssignedUserChange } from '../../helpers/utils.helper';
 import httpStatus from '../../lib/http-status';
 import { AuthUser, PaginationOptions } from '../../types';
 import taskStatusAuditLogService from '../taskStatusAuditLog/taskStatusAuditLog.service';
@@ -30,59 +31,60 @@ class TaskService {
     };
   }
 
-  async updateTask(
-    authUser: AuthUser,
-    taskId: string,
-    payload: UpdateTaskPayload,
-  ) {
-    let hasAssignedUserChanged = false;
-
-    // Fetch task
-    const task = await taskRepository.findById(taskId);
-    if (!task) {
-      throw new AppError(httpStatus.NOT_FOUND, 'Task not found');
-    }
-
-    // Authorization: only creator can update
-    if (task.creatorId !== authUser.id) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        'You are not allowed to update this task',
-      );
-    }
-
-    // Validate assigned user if changed
-    const { assignedToId } = payload;
-    if (assignedToId && assignedToId !== task.assignedToId) {
-      const assignedUserExists = await userRepository.isExistById(assignedToId);
-      if (!assignedUserExists) {
-        throw new AppError(httpStatus.NOT_FOUND, 'Assigned user not found');
-      }
-      hasAssignedUserChanged = true;
-    }
-
-    // Update task
-    const updatedTask = await taskRepository.updateById(taskId, payload);
-
-    const hasStatusChanged = task.status !== updatedTask.status;
-
-    // If status has changed, asynchronously create an audit log
-    if (hasStatusChanged) {
-      taskStatusAuditLogService.createLog({
-        taskId: updatedTask.id,
-        oldStatus: task.status,
-        newStatus: updatedTask.status,
-        changedById: authUser.id,
-      });
-    }
-
-    return {
-      data: updatedTask,
-      ...(hasAssignedUserChanged
-        ? { assigned: { from: task.assignedToId, to: payload.assignedToId } }
-        : {}),
-    };
+ async updateTask(
+  authUser: AuthUser,
+  taskId: string,
+  payload: UpdateTaskPayload,
+) {
+  //  Fetch task
+  const task = await taskRepository.findById(taskId);
+  if (!task) {
+    throw new AppError(httpStatus.NOT_FOUND, "Task not found");
   }
+
+  //Authorization
+  const isCreator = task.creatorId === authUser.id;
+  const isAssignee = task.assignedToId === authUser.id;
+
+  if (!isCreator && !isAssignee) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not allowed to update this task",
+    );
+  }
+
+  // Assignment change validation
+  const assignedChange = getAssignedUserChange(task.assignedToId, payload.assignedToId);
+
+  if (assignedChange.changed && assignedChange.to) {
+    const exists = await userRepository.isExistById(assignedChange.to);
+    if (!exists) {
+      throw new AppError(httpStatus.NOT_FOUND, "Assigned user not found");
+    }
+  }
+
+  // Update task
+  const updatedTask = await taskRepository.updateById(taskId, payload);
+
+  //  Status audit log
+  if (task.status !== updatedTask.status) {
+    taskStatusAuditLogService.createLog({
+      taskId: updatedTask.id,
+      oldStatus: task.status,
+      newStatus: updatedTask.status,
+      changedById: authUser.id,
+    });
+  }
+
+  // Response
+  return {
+    data: updatedTask,
+    ...(assignedChange.changed && {
+      assigned: assignedChange,
+    }),
+  };
+}
+
 
   async deleteTask(authUser: AuthUser, taskId: string) {
     const task = await taskRepository.findById(taskId);

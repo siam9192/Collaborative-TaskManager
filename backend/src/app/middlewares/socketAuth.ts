@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import cookie from 'cookie';
 import AppError from '../lib/AppError';
 import httpStatus from '../lib/http-status';
@@ -7,7 +7,6 @@ import jwtHelper from '../helpers/jwt.helper';
 import envConfig from '../config/env.config';
 import { AuthUser } from '../types';
 import userRepository from '../modules/user/user.repository';
-
 import { UserAccountStatus } from '@prisma/client';
 
 export default function socketAuth() {
@@ -21,8 +20,13 @@ export default function socketAuth() {
         );
       }
 
-      const cookies = cookie.parse(cookieHeader);
-      const token = cookies.accessToken; // your cookie name
+      const cookies: Record<string, string> = {};
+
+      cookieHeader.split(';').forEach((c) => {
+        const [key, value] = c.trim().split('=');
+        if (key && value) cookies[key] = value;
+      });
+      const token = cookies!.accessToken; // your cookie name
 
       if (!token) {
         return next(
@@ -49,11 +53,6 @@ export default function socketAuth() {
         throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
       }
 
-      // checking if the user is already deleted
-      // if (user.isDeleted) {
-      //   throw new AppError(httpStatus.FORBIDDEN, "This user is deleted ! !");
-      // }
-
       // checking if the user is blocked
 
       if (user.status === UserAccountStatus.Blocked) {
@@ -62,8 +61,10 @@ export default function socketAuth() {
 
       // Attach user info to socket
       socket.data.user = decoded as AuthUser;
+
       next();
     } catch (error) {
+      console.log(error);
       next(
         new Error(
           JSON.stringify({

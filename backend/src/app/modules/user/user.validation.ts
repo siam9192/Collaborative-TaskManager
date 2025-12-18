@@ -30,7 +30,8 @@ export const updateUserProfileSchema = z.object({
 
   profilePhoto: z
     .string()
-    .url('Profile picture must be a valid URL').nullable()
+    .url('Profile picture must be a valid URL')
+    .nullable()
     .optional(),
 
   gender: z.nativeEnum(Gender).nullable().optional(),

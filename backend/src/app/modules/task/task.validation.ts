@@ -14,7 +14,11 @@ const createTaskSchema = z.object({
 
   priority: z.nativeEnum(Priority),
   status: z.nativeEnum(TaskStatus),
-  assignedToId: z.string().cuid("assignedToId is required").optional().nullable(),
+  assignedToId: z
+    .string()
+    .cuid('assignedToId is required')
+    .optional()
+    .nullable(),
 });
 
 const updateTaskSchema = createTaskSchema.partial();

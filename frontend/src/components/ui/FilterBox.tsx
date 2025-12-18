@@ -21,11 +21,12 @@ function FilterBox({ onChange }: Props) {
   const [filterValues, setFilterValues] = useState<TaskFilterValues>({});
 
   useEffect(() => {
-  onChange &&  onChange({
-      sortBy,
-      sortOrder,
-      ...filterValues,
-    });
+    onChange &&
+      onChange({
+        sortBy,
+        sortOrder,
+        ...filterValues,
+      });
   }, [sortBy, sortOrder, filterValues, onChange]);
 
   return (
@@ -53,9 +54,7 @@ function FilterBox({ onChange }: Props) {
         <button
           type="button"
           className="btn btn-sm btn-outline"
-          onClick={() =>
-            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-          }
+          onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
         >
           {sortOrder === "asc" ? "↑ Asc" : "↓ Desc"}
         </button>

@@ -20,21 +20,13 @@ interface Props {
 }
 
 function UpdateTaskModal({ task, onSubmit }: Props) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-  } = useForm<UpdateTaskFormValues>({
+  const { register, handleSubmit, setValue, watch, reset } = useForm<UpdateTaskFormValues>({
     defaultValues: {
       title: task.title,
       description: task.description,
       priority: task.priority,
       status: task.status,
-      dueDate: task.dueDate
-        ? new Date(task.dueDate).toISOString().slice(0, 16)
-        : "",
+      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : "",
       assignedToId: task.assignedToId,
     },
   });
@@ -53,14 +45,15 @@ function UpdateTaskModal({ task, onSubmit }: Props) {
   return (
     <>
       {/* Open Button */}
-     
-        
-            <button  onClick={() =>
-          (document.getElementById(`update-task-${task.id}`) as HTMLDialogElement)?.showModal()
-        } className="btn btn-xs btn-ghost">
-          <Pencil size={16} />
-          </button>
 
+      <button
+        onClick={() =>
+          (document.getElementById(`update-task-${task.id}`) as HTMLDialogElement)?.showModal()
+        }
+        className="btn btn-xs btn-ghost"
+      >
+        <Pencil size={16} />
+      </button>
 
       {/* Modal */}
       <dialog id={`update-task-${task.id}`} className="modal">
@@ -68,25 +61,15 @@ function UpdateTaskModal({ task, onSubmit }: Props) {
           <h3 className="font-bold text-lg mb-4">Update Task</h3>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-
             {/* ---------- Title ---------- */}
             <div>
               <label className="label font-medium">Title</label>
-              <input
-                className="input input-bordered w-full"
-                {...register("title")}
-              />
+              <input className="input input-bordered w-full" {...register("title")} />
               <div className="flex justify-between text-xs mt-1 opacity-70">
                 <span>
                   {TASK_PROPERTY_LENGTH.title.min}–{TASK_PROPERTY_LENGTH.title.max} characters
                 </span>
-                <span
-                  className={
-                    titleLength > TASK_PROPERTY_LENGTH.title.max
-                      ? "text-error"
-                      : ""
-                  }
-                >
+                <span className={titleLength > TASK_PROPERTY_LENGTH.title.max ? "text-error" : ""}>
                   {titleLength}/{TASK_PROPERTY_LENGTH.title.max}
                 </span>
               </div>
@@ -101,15 +84,11 @@ function UpdateTaskModal({ task, onSubmit }: Props) {
               />
               <div className="flex justify-between text-xs mt-1 opacity-70">
                 <span>
-                  {TASK_PROPERTY_LENGTH.description.min}–
-                  {TASK_PROPERTY_LENGTH.description.max} characters
+                  {TASK_PROPERTY_LENGTH.description.min}–{TASK_PROPERTY_LENGTH.description.max}{" "}
+                  characters
                 </span>
                 <span
-                  className={
-                    descLength > TASK_PROPERTY_LENGTH.description.max
-                      ? "text-error"
-                      : ""
-                  }
+                  className={descLength > TASK_PROPERTY_LENGTH.description.max ? "text-error" : ""}
                 >
                   {descLength}/{TASK_PROPERTY_LENGTH.description.max}
                 </span>
@@ -130,10 +109,7 @@ function UpdateTaskModal({ task, onSubmit }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="label font-medium">Priority</label>
-                <select
-                  className="select select-bordered w-full"
-                  {...register("priority")}
-                >
+                <select className="select select-bordered w-full" {...register("priority")}>
                   {Object.values(TaskPriority).map((p) => (
                     <option key={p} value={p}>
                       {p}
@@ -144,10 +120,7 @@ function UpdateTaskModal({ task, onSubmit }: Props) {
 
               <div>
                 <label className="label font-medium">Status</label>
-                <select
-                  className="select select-bordered w-full"
-                  {...register("status")}
-                >
+                <select className="select select-bordered w-full" {...register("status")}>
                   {Object.values(TaskStatus).map((s) => (
                     <option key={s} value={s}>
                       {s.replace("_", " ")}
@@ -166,9 +139,7 @@ function UpdateTaskModal({ task, onSubmit }: Props) {
                 className="flex items-center gap-2 px-4 py-3 bg-base-200 hover:bg-base-300 rounded-lg transition"
               >
                 <UserPlus size={18} />
-                <span className="text-sm">
-                  {task.assignedTo?.name || "Select User"}
-                </span>
+                <span className="text-sm">{task.assignedTo?.name || "Select User"}</span>
               </button>
             </div>
 

@@ -1,16 +1,15 @@
 import React, { useRef, useState } from "react";
 
-  const privacyOptions = [
-    {
-     label:"Public",
-     value:"public"
-    },
-    {
-      label:"Private",
-      value:"private"
-    }
-
-  ]
+const privacyOptions = [
+  {
+    label: "Public",
+    value: "public",
+  },
+  {
+    label: "Private",
+    value: "private",
+  },
+];
 
 function AddChannelModal() {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -41,7 +40,6 @@ function AddChannelModal() {
     if (!channelName) return;
 
     console.log("New channel:", { name: channelName, avatarFile });
- 
 
     closeModal();
   };
@@ -57,10 +55,10 @@ function AddChannelModal() {
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <h3 className="font-bold text-xl">Create a New Channel</h3>
-        
-            {/* Avatar Input */}
-         <div className="mt-5">
-               <label className="flex flex-col items-center gap-3 cursor-pointer">
+
+          {/* Avatar Input */}
+          <div className="mt-5">
+            <label className="flex flex-col items-center gap-3 cursor-pointer">
               <div className="size-24 bg-base-300 rounded-full flex items-center justify-center overflow-hidden">
                 {avatarPreview ? (
                   <img src={avatarPreview} alt="avatar" className="w-full h-full object-cover " />
@@ -68,7 +66,7 @@ function AddChannelModal() {
                   <span className="text-2xl">📷</span>
                 )}
               </div>
-              <span className="text-sm text-gray-600 text-center">Upload Avatar        (optional)</span>
+              <span className="text-sm text-gray-600 text-center">Upload Avatar (optional)</span>
               <input
                 type="file"
                 accept="image/*"
@@ -76,8 +74,7 @@ function AddChannelModal() {
                 onChange={handleAvatarChange}
               />
             </label>
-         </div>
-
+          </div>
 
           <form onSubmit={handleSubmit} className="py-4 flex flex-col gap-3">
             {/* Channel Name */}
@@ -89,17 +86,15 @@ function AddChannelModal() {
               required
             />
 
-              {/* Privacy */}
-            <select  defaultValue={privacyOptions[0].value} className="select w-full">
-  <option disabled={true} value={"default"}>Pick a privacy</option>
- {
-  Object.values(privacyOptions).map(_=>(
-    <option value={_.value}>{_.label}</option>
-  ))
- }
-</select>
-
-
+            {/* Privacy */}
+            <select defaultValue={privacyOptions[0].value} className="select w-full">
+              <option disabled={true} value={"default"}>
+                Pick a privacy
+              </option>
+              {Object.values(privacyOptions).map((_) => (
+                <option value={_.value}>{_.label}</option>
+              ))}
+            </select>
 
             {/* Modal actions */}
             <div className="modal-action justify-between">

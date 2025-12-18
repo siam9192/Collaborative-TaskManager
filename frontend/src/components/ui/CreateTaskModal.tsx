@@ -62,23 +62,12 @@ function CreateTaskModal({ onSubmit }: Props) {
           <h3 className="font-bold text-lg mb-4">Create New Task</h3>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-
             {/* ---------- Title ---------- */}
             <div>
               <label className="label font-medium">Title</label>
-              <input
-                className="input input-bordered w-full"
-                {...register("title")}
-              />
+              <input className="input input-bordered w-full" {...register("title")} />
               <div className="flex justify-end text-xs mt-1 opacity-70">
-              
-                <span
-                  className={
-                    titleLength > TASK_PROPERTY_LENGTH.title.max
-                      ? "text-error"
-                      : ""
-                  }
-                >
+                <span className={titleLength > TASK_PROPERTY_LENGTH.title.max ? "text-error" : ""}>
                   {titleLength}/{TASK_PROPERTY_LENGTH.title.max}
                 </span>
               </div>
@@ -92,13 +81,8 @@ function CreateTaskModal({ onSubmit }: Props) {
                 {...register("description")}
               />
               <div className="flex justify-end text-xs mt-1 opacity-70">
-               
                 <span
-                  className={
-                    descLength > TASK_PROPERTY_LENGTH.description.max
-                      ? "text-error"
-                      : ""
-                  }
+                  className={descLength > TASK_PROPERTY_LENGTH.description.max ? "text-error" : ""}
                 >
                   {descLength}/{TASK_PROPERTY_LENGTH.description.max}
                 </span>
@@ -119,10 +103,7 @@ function CreateTaskModal({ onSubmit }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="label font-medium">Priority</label>
-                <select
-                  className="select select-bordered w-full"
-                  {...register("priority")}
-                >
+                <select className="select select-bordered w-full" {...register("priority")}>
                   {Object.values(TaskPriority).map((p) => (
                     <option key={p} value={p}>
                       {p}
@@ -133,10 +114,7 @@ function CreateTaskModal({ onSubmit }: Props) {
 
               <div>
                 <label className="label font-medium">Status</label>
-                <select
-                  className="select select-bordered w-full"
-                  {...register("status")}
-                >
+                <select className="select select-bordered w-full" {...register("status")}>
                   {Object.values(TaskStatus).map((s) => (
                     <option key={s} value={s}>
                       {s.replace("_", " ")}

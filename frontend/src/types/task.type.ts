@@ -1,25 +1,25 @@
 export interface Task {
-    id:string
-    title:string
-    description:string
-    priority:TaskPriority
-    status:TaskStatus
-    dueDate:string|Date
-    createdAt:string|Date
-    updatedAt:string|Date
-    creatorId:string
-    assignedToId:string
-    creator:TaskUser,
-    assignedTo:TaskUser
+  id: string;
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  status: TaskStatus;
+  dueDate: string | Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  creatorId: string;
+  assignedToId: string;
+  creator: TaskUser;
+  assignedTo: TaskUser;
 }
 
 export type TaskUser = {
-      id:string
-      name:string
-      username:string
-      profilePicture:string
-    }
-export enum  TaskStatus {
+  id: string;
+  name: string;
+  username: string;
+  profilePicture: string;
+};
+export enum TaskStatus {
   To_Do = "To_Do",
   In_Progress = "In_Progress",
   Review = "Review",
@@ -30,5 +30,5 @@ export enum TaskPriority {
   Low = "Low",
   Medium = "Medium",
   High = "High",
-  Urgent = "Urgent"
+  Urgent = "Urgent",
 }

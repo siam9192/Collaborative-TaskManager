@@ -43,10 +43,13 @@ function ChannelSidebar() {
 
   return (
     <aside className="bg-base-200 border-l border-base-300 h-[calc(100vh-52px)] flex flex-col">
-      
       {/* Header */}
       <div className="p-4 border-b border-base-300 flex items-center gap-3">
-        <img src={channel.avatar} alt={channel.name} className="w-10 h-10 rounded-full object-cover" />
+        <img
+          src={channel.avatar}
+          alt={channel.name}
+          className="w-10 h-10 rounded-full object-cover"
+        />
         <div>
           <h2 className="text-lg font-semibold">#{channel.name}</h2>
           <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -61,20 +64,22 @@ function ChannelSidebar() {
           Members (23)
         </h3>
         <ul className="flex flex-col gap-2">
-          {channel.members.sort((a,b)=>Number(b.isActive)-Number(a.isActive)).map((member) => (
-            <li key={member.id} className="flex items-center gap-3 p-2 rounded hover:bg-base-300">
-              <img
-                src={member.avatar}
-                alt={member.name}
-                className={`w-8 h-8 rounded-full object-cover ${
-                  member.isActive ? "ring-2 ring-green-500" : "opacity-50"
-                }`}
-              />
-              <span className={`${member.isActive ? "font-medium" : "text-gray-400"}`}>
-                {member.name}
-              </span>
-            </li>
-          ))}
+          {channel.members
+            .sort((a, b) => Number(b.isActive) - Number(a.isActive))
+            .map((member) => (
+              <li key={member.id} className="flex items-center gap-3 p-2 rounded hover:bg-base-300">
+                <img
+                  src={member.avatar}
+                  alt={member.name}
+                  className={`w-8 h-8 rounded-full object-cover ${
+                    member.isActive ? "ring-2 ring-green-500" : "opacity-50"
+                  }`}
+                />
+                <span className={`${member.isActive ? "font-medium" : "text-gray-400"}`}>
+                  {member.name}
+                </span>
+              </li>
+            ))}
         </ul>
       </div>
 

@@ -1,11 +1,4 @@
-
-import {
-  Home,
-  ListChecks,
-  Settings,
-  LogOut,
-  User,
-} from "lucide-react";
+import { Home, ListChecks, Settings, LogOut, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Sidebar() {

@@ -10,8 +10,8 @@ export type AssignUser = {
 };
 
 interface Props {
-  onAssign: (id:string) => void;
-  onClose:()=>void
+  onAssign: (id: string) => void;
+  onClose: () => void;
 }
 
 const mockUsers: AssignUser[] = [
@@ -31,7 +31,7 @@ const mockUsers: AssignUser[] = [
   },
 ];
 
-function AssignToDialog({ onAssign,onClose }: Props) {
+function AssignToDialog({ onAssign, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState<AssignUser[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -46,16 +46,16 @@ function AssignToDialog({ onAssign,onClose }: Props) {
     const filtered = mockUsers.filter(
       (user) =>
         user.email.toLowerCase().includes(query.toLowerCase()) ||
-        user.username.toLowerCase().includes(query.toLowerCase())
+        user.username.toLowerCase().includes(query.toLowerCase()),
     );
 
     setUsers(filtered);
   }, [query]);
 
-  const close = ()=>{
+  const close = () => {
     (document.getElementById("assign-user-dialog") as HTMLDialogElement)?.close();
-     onClose()
-  }
+    onClose();
+  };
   const handleAssign = () => {
     if (!selectedUserId) return;
 
@@ -63,19 +63,16 @@ function AssignToDialog({ onAssign,onClose }: Props) {
     setQuery("");
     setUsers([]);
     setSelectedUserId(null);
-   
-    close()
-    
+
+    close();
   };
 
-  useEffect(()=>{
-      (document.getElementById("assign-user-dialog") as HTMLDialogElement)?.showModal()
-  },[])
+  useEffect(() => {
+    (document.getElementById("assign-user-dialog") as HTMLDialogElement)?.showModal();
+  }, []);
 
   return (
     <>
-
-
       {/* Dialog */}
       <dialog id="assign-user-dialog" className="modal">
         <div className="modal-box">
@@ -95,9 +92,7 @@ function AssignToDialog({ onAssign,onClose }: Props) {
 
           {/* User Results */}
           <div className="space-y-2 max-h-60 overflow-y-auto">
-            {users.length === 0 && query && (
-              <p className="text-sm opacity-60">No users found</p>
-            )}
+            {users.length === 0 && query && <p className="text-sm opacity-60">No users found</p>}
 
             {users.map((user) => (
               <div
@@ -110,10 +105,7 @@ function AssignToDialog({ onAssign,onClose }: Props) {
                     : "border-base-200 hover:bg-base-200"
                 }`}
               >
-                <img
-                  src={user.profilePicture}
-                  className="w-10 h-10 rounded-full"
-                />
+                <img src={user.profilePicture} className="w-10 h-10 rounded-full" />
                 <div className="flex-1">
                   <p className="font-medium">{user.name}</p>
                   <p className="text-sm opacity-70">
@@ -126,17 +118,10 @@ function AssignToDialog({ onAssign,onClose }: Props) {
 
           {/* Actions */}
           <div className="modal-action">
-            <button
-              className="btn btn-ghost"
-              onClick={close}
-            >
+            <button className="btn btn-ghost" onClick={close}>
               Cancel
             </button>
-            <button
-              className="btn btn-primary"
-              disabled={!selectedUserId}
-              onClick={handleAssign}
-            >
+            <button className="btn btn-primary" disabled={!selectedUserId} onClick={handleAssign}>
               Assign
             </button>
           </div>

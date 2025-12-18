@@ -9,7 +9,6 @@ interface FilterModalProps {
   onApply: (filters: TaskFilterValues) => void;
 }
 
-
 function FilterModal({ onApply }: FilterModalProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,8 +16,8 @@ function FilterModal({ onApply }: FilterModalProps) {
     const formData = new FormData(e.currentTarget);
 
     onApply({
-      status: formData.get("status") as TaskStatus || undefined,
-      priority: formData.get("priority") as TaskPriority || undefined,
+      status: (formData.get("status") as TaskStatus) || undefined,
+      priority: (formData.get("priority") as TaskPriority) || undefined,
     });
 
     (document.getElementById("filter_modal") as HTMLDialogElement).close();
@@ -29,9 +28,7 @@ function FilterModal({ onApply }: FilterModalProps) {
       {/* Open Button */}
       <button
         className="btn btn-sm bg-primary text-white"
-        onClick={() =>
-          (document.getElementById("filter_modal") as HTMLDialogElement).showModal()
-        }
+        onClick={() => (document.getElementById("filter_modal") as HTMLDialogElement).showModal()}
       >
         Filter By
       </button>
@@ -71,8 +68,6 @@ function FilterModal({ onApply }: FilterModalProps) {
                 ))}
               </select>
             </div>
-
-        
 
             {/* Actions */}
             <div className="modal-action">

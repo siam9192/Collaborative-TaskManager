@@ -6,7 +6,6 @@ import AssignedTasks from "../sections/AssignedTasks";
 import OverdueTasks from "../sections/OverdueTasks";
 import CreateTaskModal from "../ui/CreateTaskModal";
 
-
 // Mock current user
 const currentUser: TaskUser = {
   id: "user-123",
@@ -27,7 +26,12 @@ const mockTasks: Task[] = [
     updatedAt: "2025-12-05",
     creatorId: "user-456",
     assignedToId: "user-123",
-    creator: { id: "user-456", name: "Alice", username: "alice123", profilePicture: "https://i.pravatar.cc/150?img=5" },
+    creator: {
+      id: "user-456",
+      name: "Alice",
+      username: "alice123",
+      profilePicture: "https://i.pravatar.cc/150?img=5",
+    },
     assignedTo: currentUser,
   },
   {
@@ -41,7 +45,12 @@ const mockTasks: Task[] = [
     creatorId: "user-123",
     assignedToId: "user-456",
     creator: currentUser,
-    assignedTo: { id: "user-456", name: "Alice", username: "alice123", profilePicture: "https://i.pravatar.cc/150?img=5" },
+    assignedTo: {
+      id: "user-456",
+      name: "Alice",
+      username: "alice123",
+      profilePicture: "https://i.pravatar.cc/150?img=5",
+    },
   },
   {
     id: "3",
@@ -58,17 +67,16 @@ const mockTasks: Task[] = [
   },
 ];
 
-
 export default function TasksPage() {
   const [assignedTasks, setAssignedTasks] = useState<Task[]>([]);
   const [createdTasks, setCreatedTasks] = useState<Task[]>([]);
   const [overdueTasks, setOverdueTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const assigned = mockTasks.filter(task => task.assignedTo.id === currentUser.id);
-    const created = mockTasks.filter(task => task.creator.id === currentUser.id);
+    const assigned = mockTasks.filter((task) => task.assignedTo.id === currentUser.id);
+    const created = mockTasks.filter((task) => task.creator.id === currentUser.id);
     const overdue = mockTasks.filter(
-      task => new Date(task.updatedAt) < new Date() && task.status !== TaskStatus.Completed
+      (task) => new Date(task.updatedAt) < new Date() && task.status !== TaskStatus.Completed,
     );
 
     setAssignedTasks(assigned);
@@ -79,15 +87,12 @@ export default function TasksPage() {
   return (
     <div className=" mx-auto space-y-10">
       {/* Assigned Tasks */}
-     
-     <CreateTaskModal/>
 
-<CreatedTasks tasks={createdTasks}/>
-<AssignedTasks tasks={assignedTasks}/>
-<OverdueTasks tasks={overdueTasks}/>
-  
-   
-    
+      <CreateTaskModal />
+
+      <CreatedTasks tasks={createdTasks} />
+      <AssignedTasks tasks={assignedTasks} />
+      <OverdueTasks tasks={overdueTasks} />
     </div>
   );
 }

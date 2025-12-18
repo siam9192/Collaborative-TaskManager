@@ -1,34 +1,61 @@
-import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import authValidation from "../../validations/auth.validation";
+import { userUserLoginMutation } from "../../query/services/auth.service";
+import { toast } from "sonner";
+import { queryClient } from "../../App";
+
+type LoginFormValues = z.infer<typeof authValidation.userLoginSchema>;
 
 function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Login attempt:", { username, password });
-    // TODO: replace with real login logic
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(authValidation.userLoginSchema),
+  });
+  const { mutate } = userUserLoginMutation();
+  const navigate = useNavigate();
+  const onSubmit = (data: LoginFormValues) => {
+    mutate(data, {
+      onSuccess: () => {
+        toast.success("Login successful");
+        reset();
+        queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
+      },
+      onError: (err) => {
+        toast.error(err.message);
+      },
+    });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
+    <div className="min-h-screen flex items-center justify-center  px-4">
       <div className="bg-base-100 p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Login to your account</h2>
 
-        <form className="space-y-4" onSubmit={handleLogin}>
-          {/* Username */}
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+          {/* Identifier */}
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text">Username</span>
+              <span className="label-text">Username or Email</span>
             </label>
             <input
               type="text"
-              placeholder="Enter your username"
-              className="input input-bordered w-full"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
+              placeholder="Enter username or email"
+              className={`input input-bordered w-full ${errors.identifier ? "input-error" : ""}`}
+              {...register("identifier")}
             />
+            {errors.identifier && (
+              <p className="text-error text-sm mt-1">{errors.identifier.message}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -39,25 +66,26 @@ function LoginPage() {
             <input
               type="password"
               placeholder="Enter your password"
-              className="input input-bordered w-full"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              className={`input input-bordered w-full ${errors.password ? "input-error" : ""}`}
+              {...register("password")}
             />
+            {errors.password && (
+              <p className="text-error text-sm mt-1">{errors.password.message}</p>
+            )}
           </div>
 
           {/* Login Button */}
-          <button
-            type="submit"
-            className="btn btn-primary w-full mt-4"
-          >
-            Login
+          <button type="submit" className="btn btn-primary w-full mt-4" disabled={isSubmitting}>
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        {/* Optional: Signup link */}
+        {/* Signup link */}
         <p className="text-center text-sm opacity-70 mt-4">
-          Don't have an account? <a href="#" className="text-primary">Sign Up</a>
+          Don't have an account?{" "}
+          <Link to="/register" className="text-primary font-medium">
+            Register
+          </Link>
         </p>
       </div>
     </div>

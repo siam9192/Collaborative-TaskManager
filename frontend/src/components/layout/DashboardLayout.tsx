@@ -1,7 +1,6 @@
-
-import { Outlet } from 'react-router-dom'
-import Sidebar from '../shared/Sidebar'
-import Header from '../shared/Header'
+import { Outlet } from "react-router-dom";
+import Sidebar from "../shared/Sidebar";
+import Header from "../shared/Header";
 
 function DashboardLayout() {
   return (
@@ -25,6 +24,4 @@ function DashboardLayout() {
   );
 }
 
-
-
-export default DashboardLayout
+export default DashboardLayout;

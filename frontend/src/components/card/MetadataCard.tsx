@@ -15,14 +15,10 @@ const MetadataCard = ({ data }: Props) => {
       </div>
 
       {/* Label */}
-      <span className="text-lg font-medium text-center opacity-80">
-        {data.label}
-      </span>
+      <span className="text-lg font-medium text-center opacity-80">{data.label}</span>
 
       {/* Value */}
-      <p className="text-3xl md:text-4xl font-bold text-center text-base-content">
-        {data.value}
-      </p>
+      <p className="text-3xl md:text-4xl font-bold text-center text-base-content">{data.value}</p>
     </div>
   );
 };

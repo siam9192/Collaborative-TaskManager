@@ -30,7 +30,7 @@ export default function ProtectRouted({ access, children, redirectTo }: Props) {
   // Guest routes (requires user NOT to be logged in)
   if (access === "guest") {
     if (user) {
-      return <Navigate to={redirectTo || "/"} replace />;
+      return <Navigate to={redirectTo || "/"}  replace />;
     }
     return <>{children}</>;
   }

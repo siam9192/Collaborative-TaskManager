@@ -8,10 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { z } from "zod";
 import taskValidation from "../../validations/task.validation";
-import type { AssignUser } from "../../types/user.type";
+import type { AssignUser, CurrentUser } from "../../types/user.type";
 import { useUpdateTaskMutation } from "../../query/services/task.service";
 import { toast } from "sonner";
 import { queryClient } from "../../App";
+import { useCurrentUserProviderContext } from "../../context/CurrentUserProviderContext";
 
 type UpdateTaskFormValues = z.infer<typeof taskValidation.updateTaskSchema>;
 
@@ -20,6 +21,8 @@ interface Props {
 }
 
 function UpdateTaskModal({ task }: Props) {
+  const { data } = useCurrentUserProviderContext();
+  const user = data?.data as CurrentUser;
   const {
     register,
     handleSubmit,
@@ -57,6 +60,9 @@ function UpdateTaskModal({ task }: Props) {
           queryClient.invalidateQueries({
             queryKey: ["tasks"],
           });
+          if (!data.assignedToId) {
+            setAssignUser(null);
+          }
           reset();
           close();
         },
@@ -147,52 +153,54 @@ function UpdateTaskModal({ task }: Props) {
             </div>
 
             {/* ---------- Assign To ---------- */}
-            <div>
-              <label className="label font-medium">Assign To (optional)</label>
-              {!assignUser ? (
-                <button
-                  type="button"
-                  onClick={() => setIsAssignDialog(true)}
-                  className="p-5 bg-base-300 block mt-2 rounded-lg"
-                >
-                  {" "}
-                  <UserPlus size={24} />{" "}
-                </button>
-              ) : (
-                <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg mt-2">
-                  {/* User Info */}
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="w-10 rounded-full bg-base-300">
-                        <img
-                          src={assignUser.profilePhoto ?? DEFAULT_PROFILE_PHOTO}
-                          alt={assignUser.name}
-                        />
+            {task.assignedToId !== user.id ? (
+              <div>
+                <label className="label font-medium">Assign To (optional)</label>
+                {!assignUser ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsAssignDialog(true)}
+                    className="p-5 bg-base-300 block mt-2 rounded-lg"
+                  >
+                    {" "}
+                    <UserPlus size={24} />{" "}
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-between p-4 bg-base-200 rounded-lg mt-2">
+                    {/* User Info */}
+                    <div className="flex items-center gap-3">
+                      <div className="avatar">
+                        <div className="w-10 rounded-full bg-base-300">
+                          <img
+                            src={assignUser.profilePhoto ?? DEFAULT_PROFILE_PHOTO}
+                            alt={assignUser.name}
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="font-medium text-sm">{assignUser.name}</p>
+                        <p className="text-xs opacity-70">@{assignUser.username}</p>
                       </div>
                     </div>
 
-                    <div>
-                      <p className="font-medium text-sm">{assignUser.name}</p>
-                      <p className="text-xs opacity-70">@{assignUser.username}</p>
-                    </div>
+                    {/* Remove Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAssignUser(null);
+                        setValue("assignedToId", null);
+                      }}
+                      className="btn btn-ghost btn-sm text-error"
+                    >
+                      Remove
+                    </button>
                   </div>
+                )}
 
-                  {/* Remove Button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAssignUser(null);
-                      setValue("assignedToId", null);
-                    }}
-                    className="btn btn-ghost btn-sm text-error"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-
-              <p className="text-xs text-error mt-1">{errors.assignedToId?.message}</p>
-            </div>
+                <p className="text-xs text-error mt-1">{errors.assignedToId?.message}</p>
+              </div>
+            ) : null}
 
             {/* ---------- Actions ---------- */}
             <div className="modal-action">
@@ -210,7 +218,10 @@ function UpdateTaskModal({ task }: Props) {
       {/* Assign Dialog */}
       {isAssignDialog && (
         <AssignToDialog
-          onAssign={(user) => setValue("assignedToId", user.id)}
+          onAssign={(user) =>{
+             setValue("assignedToId", user.id)
+             setAssignUser(user)
+          }}
           onClose={() => setIsAssignDialog(false)}
         />
       )}

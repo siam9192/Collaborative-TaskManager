@@ -2,23 +2,24 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "../App";
 import HomePage from "../components/pages/HomePage";
 import LoginPage from "../components/pages/LoginPage";
-import SignupPage from "../components/pages/RegistrationPage";
 import IntroPage from "../components/pages/IntroPage";
 import TasksPage from "../components/pages/TasksPage";
 import EditProfilePage from "../components/pages/EditProfilePage";
 import UserApp from "../UserApp";
-import ProtectRouted from "../ProtectedRoute";
+import ProtectRoute from "../ProtectedRoute";
+import RegistrationPage from "../components/pages/RegistrationPage";
 
 function Router() {
+  
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
           <Route
             element={
-              <ProtectRouted access="authenticated">
+              <ProtectRoute access="authenticated">
                 <UserApp />
-              </ProtectRouted>
+              </ProtectRoute>
             }
           >
             <Route index element={<HomePage />} />
@@ -28,8 +29,8 @@ function Router() {
           </Route>
 
           {/* Auth routes */}
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<SignupPage />} />
+          <Route path="login" element={<ProtectRoute access="guest" ><LoginPage /></ProtectRoute>} />
+          <Route path="register" element={<ProtectRoute access="guest"><RegistrationPage/></ProtectRoute>} />
           <Route path="intro" element={<IntroPage />} />
         </Route>
       </Routes>

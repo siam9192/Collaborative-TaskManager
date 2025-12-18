@@ -1,4 +1,7 @@
-import { getUserNotifications, markAsReadNotifications } from "../../api-services/notification.api.service";
+import {
+  getUserNotifications,
+  markAsReadNotifications,
+} from "../../api-services/notification.api.service";
 import type { Params } from "../../types";
 import type { Notification } from "../../types/notification.type";
 import useFetch from "../client/useFetch";

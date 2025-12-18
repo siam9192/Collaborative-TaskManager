@@ -39,3 +39,12 @@ export enum TaskPriority {
 export type CreateTaskPayload = z.infer<typeof taskValidation.createTaskSchema>;
 
 export type UpdateTaskPayload = z.infer<typeof taskValidation.updateTaskSchema>;
+
+export enum TaskEvent {
+  CREATED = "task:created",
+  UPDATED = "task:updated",
+  ASSIGNED = "task:assigned",
+  UNASSIGNED = "task:unassigned",
+  COMPLETED = "task:completed",
+  DELETED = "task:deleted",
+}

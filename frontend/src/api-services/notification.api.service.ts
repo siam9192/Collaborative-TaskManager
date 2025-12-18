@@ -4,10 +4,9 @@ import type { IResponse } from "../types/response.type";
 import type { Params } from "../types";
 import type { Notification } from "../types/notification.type";
 
-
-export async function getUserNotifications(params:Params): Promise<IResponse<Notification[]>> {
+export async function getUserNotifications(params: Params): Promise<IResponse<Notification[]>> {
   try {
-    const res = await axiosInstance.get("/notifications",{params});
+    const res = await axiosInstance.get("/notifications", { params });
     return res.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
@@ -19,7 +18,6 @@ export async function getUserNotifications(params:Params): Promise<IResponse<Not
     throw new Error(message);
   }
 }
-
 
 export async function markAsReadNotifications(): Promise<IResponse<null>> {
   try {

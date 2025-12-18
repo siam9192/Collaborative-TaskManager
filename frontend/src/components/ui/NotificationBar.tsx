@@ -1,13 +1,14 @@
-
-import{  useEffect, useRef, useState, type UIEvent } from "react";
+import { useEffect, useRef, useState, type UIEvent } from "react";
 import { useLocation } from "react-router-dom";
-import { useGetNotificationsQuery, useMarkAsReadNotificationsMutation } from "../../query/services/notification.service";
+import {
+  useGetNotificationsQuery,
+  useMarkAsReadNotificationsMutation,
+} from "../../query/services/notification.service";
 import { useGetUserNotificationsMetadataQuery } from "../../query/services/metadata.service";
-import { Bell, BellRing} from "lucide-react";
+import { Bell, BellRing } from "lucide-react";
 import type { Notification } from "../../types/notification.type";
 import { getTimeAgo } from "../../utils/helper";
 import { queryClient } from "../../App";
-
 
 const NotificationBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ const NotificationBar = () => {
   const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const barRef = useRef<HTMLDivElement>(null);
 
   // Query for notifications
@@ -25,19 +26,17 @@ const NotificationBar = () => {
     isFetching: notificationsIsRefetching,
     refetch,
   } = useGetNotificationsQuery({
-    page:1,
-    limit:5
+    page: 1,
+    limit: 5,
   });
 
-  const { data:notificationMetadata } = useGetUserNotificationsMetadataQuery();
-  const totalUnread = notificationMetadata?.data.totalUnread??0
+  const { data: notificationMetadata } = useGetUserNotificationsMetadataQuery();
+  const totalUnread = notificationMetadata?.data.totalUnread ?? 0;
 
   const notifications = notificationData?.data ?? [];
   const meta = notificationData?.meta;
   const totalPages = meta ? Math.ceil(meta.totalResults / meta.limit) : 1;
   const { mutate: markAsReadMutate } = useMarkAsReadNotificationsMutation();
-
-
 
   /** Close on outside click */
   useEffect(() => {
@@ -51,12 +50,10 @@ const NotificationBar = () => {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [isOpen]);
 
-
-  
   //  Close when route changes
   useEffect(() => setIsOpen(false), [pathname]);
 
-//  Merge notifications on new data 
+  //  Merge notifications on new data
   useEffect(() => {
     if (!notificationsIsLoading && !notificationsIsRefetching && notifications) {
       setAllNotifications((prev) => {
@@ -92,8 +89,13 @@ const NotificationBar = () => {
       {/* Bell Button */}
       <button
         onClick={() => {
-          setIsOpen((prev) => !prev)
-          markAsReadMutate(undefined,{onSuccess:()=>queryClient.invalidateQueries({queryKey:['getUserNotificationsMetadataQuery','getNotifications']})})
+          setIsOpen((prev) => !prev);
+          markAsReadMutate(undefined, {
+            onSuccess: () =>
+              queryClient.invalidateQueries({
+                queryKey: ["getUserNotificationsMetadataQuery", "getNotifications"],
+              }),
+          });
         }}
         className="text-3xl p-2 text-txt-primary rounded-full relative hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
       >
@@ -136,8 +138,7 @@ const NotificationBar = () => {
                   key={notification.id}
                   className="p-2  hover:bg-gray-50 dark:hover:bg-base-200 rounded-lg cursor-pointer transition-colors"
                 >
-                 
-                  <div >
+                  <div>
                     <p className="text-gray-500 dark:text-gray-400 text-xs">
                       {getTimeAgo(notification.createdAt)}
                     </p>

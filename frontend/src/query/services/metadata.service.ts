@@ -10,7 +10,7 @@ export function useGetUserGlobalMetadataQuery() {
 }
 
 export function useGetUserNotificationsMetadataQuery() {
-  return useFetch<UserNotificationsMetadata>(["getUserNotificationsMetadataQuery"], () =>
+  return useFetch<UserNotificationsMetadata>(["getUserNotificationsMetadata"], () =>
     getUserNotificationsMetadata(),
   );
 }

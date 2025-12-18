@@ -6,6 +6,7 @@ import {
   deleteTask,
   getAssignedTasks,
   getCreatedTasks,
+  getOverdueTasks,
   updateTask,
 } from "../../api-services/task.api.service";
 import useMutate from "../client/useMutation";
@@ -31,5 +32,5 @@ export function useGetAssignedTasksQuery(params: Params) {
 }
 
 export function useGetOverdueTasksQuery(params: Params) {
-  return useFetch<Task[]>(["tasks", "overdue"], () => getAssignedTasks(params));
+  return useFetch<Task[]>(["tasks", "overdue"], () => getOverdueTasks(params));
 }

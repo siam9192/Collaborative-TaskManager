@@ -64,12 +64,12 @@ function TaskCard({ task }: { task: Task }) {
       </div>
 
       {/* ---------- Footer ---------- */}
-      <div className="mt-4 pt-3 border-t border-base-200 flex flex-col md:flex-row md:justify-between gap-2 text-xs text-base-content/60">
+      <div className="mt-4 pt-3 border-t border-base-200 flex flex-col md:justify-between gap-2 text-xs text-base-content/60">
         {/* Creator */}
         <span>
           Created by{" "}
           <span className="font-medium text-base-content">
-            {task.creatorId === currentUser.id ? "You" :`@${task.creator.username}`}
+            {task.creatorId === currentUser.id ? "You" : `@${task.creator.username}`}
           </span>
         </span>
 

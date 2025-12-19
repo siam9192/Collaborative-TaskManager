@@ -26,7 +26,7 @@ function ProfileSection() {
             {/* Badges */}
             <div className="flex gap-3 mt-4 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                Joined: {user.createdAt}
+                Joined: {new Date(user.createdAt).toDateString()}
               </span>
               <span className="px-3 py-1 rounded-full bg-success/10 text-success font-medium">
                 Active

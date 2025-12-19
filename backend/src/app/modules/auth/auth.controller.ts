@@ -38,6 +38,26 @@ class AuthController {
     });
   });
 
+  logout = catchAsync(async (req, res) => {
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
+      sameSite: 'strict',
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
+      sameSite: 'strict',
+    });
+
+    sendSuccessResponse(res, {
+      message: 'Logout successful',
+      statusCode: httpStatus.OK,
+      data: null,
+    });
+  });
+
   changePassword = catchAsync(async (req, res) => {
     const result = await authService.changePassword(req.user, req.body);
     res.cookie('accessToken', result.accessToken, {

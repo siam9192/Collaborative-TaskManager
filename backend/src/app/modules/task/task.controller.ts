@@ -58,61 +58,60 @@ class TaskController {
 7  emit task:updated
    ↓
 8  HTTP response */
-updateTask = catchAsync(async (req, res) => {
-  const { user: authUser, body, params } = req;
+  updateTask = catchAsync(async (req, res) => {
+    const { user: authUser, body, params } = req;
 
-  const { data, assigned } = await taskService.updateTask(
-    authUser,
-    params.id,
-    body,
-  );
-
-  const taskMeta = { id: data.id, title: data.title };
-
-  // 1️⃣ Handle assignment changes
-  if (assigned?.from) {
-    notifyUser(
-      assigned.from,
-      taskMeta,
-      "Task Unassigned",
-      `You have been unassigned from task: ${data.title}`,
-      NotificationCategory.TASK_UNASSIGNED,
+    const { data, assigned } = await taskService.updateTask(
+      authUser,
+      params.id,
+      body,
     );
 
-    emitTaskEvent(assigned.from, TaskEvent.UNASSIGNED, data.id);
-  }
+    const taskMeta = { id: data.id, title: data.title };
 
-  if (assigned?.to) {
-    notifyUser(
-      assigned.to,
-      taskMeta,
-      "New Task Assigned",
-      `You have been assigned a task: ${data.title}`,
-      NotificationCategory.TASK_ASSIGNED,
-    );
+    // 1️⃣ Handle assignment changes
+    if (assigned?.from) {
+      notifyUser(
+        assigned.from,
+        taskMeta,
+        'Task Unassigned',
+        `You have been unassigned from task: ${data.title}`,
+        NotificationCategory.TASK_UNASSIGNED,
+      );
 
-    emitTaskEvent(assigned.to, TaskEvent.ASSIGNED, data.id);
-  }
+      emitTaskEvent(assigned.from, TaskEvent.UNASSIGNED, data.id);
+    }
 
-  // 2️⃣ Emit task updated
-  const recipients = new Set<string>();
+    if (assigned?.to) {
+      notifyUser(
+        assigned.to,
+        taskMeta,
+        'New Task Assigned',
+        `You have been assigned a task: ${data.title}`,
+        NotificationCategory.TASK_ASSIGNED,
+      );
 
-  recipients.add(data.creatorId);
+      emitTaskEvent(assigned.to, TaskEvent.ASSIGNED, data.id);
+    }
 
-  if (!assigned && data.assignedToId) {
-    recipients.add(data.assignedToId);
-  }
+    // 2️⃣ Emit task updated
+    const recipients = new Set<string>();
 
-  emitToUsers([...recipients], TaskEvent.UPDATED, { id: data.id });
+    recipients.add(data.creatorId);
 
-  // 3️⃣ Response
-  sendSuccessResponse(res, {
-    message: "Task updated successfully",
-    statusCode: httpStatus.OK,
-    data,
+    if (!assigned && data.assignedToId) {
+      recipients.add(data.assignedToId);
+    }
+
+    emitToUsers([...recipients], TaskEvent.UPDATED, { id: data.id });
+
+    // 3️⃣ Response
+    sendSuccessResponse(res, {
+      message: 'Task updated successfully',
+      statusCode: httpStatus.OK,
+      data,
+    });
   });
-});
-
 
   deleteTask = catchAsync(async (req, res) => {
     const { data } = await taskService.deleteTask(req.user, req.params.id);

@@ -45,7 +45,6 @@ class NotificationService {
     const socketIds = getUsersSocketIds(userIds);
 
     if (socketIds.length) {
-      
       io.to(socketIds).emit('new-notification', {
         title: payload.title,
         message: payload.message,

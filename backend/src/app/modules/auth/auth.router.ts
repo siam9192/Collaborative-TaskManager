@@ -18,6 +18,8 @@ router.post(
   authController.login,
 );
 
+router.post('/logout', authController.logout);
+
 router.patch(
   '/change-password',
   auth(),

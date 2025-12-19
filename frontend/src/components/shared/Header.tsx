@@ -7,9 +7,9 @@ import ThemeSwitchButton from "../ui/ThemeSwitchButton";
 
 function Header() {
   return (
-    <header className="bg-base-100  dark:bg-base-200 lg:py-2  ">
+    <header className="bg-base-100  dark:bg-base-200 lg:py-4   ">
       <Container>
-        <div className="p-2 md:p-3 flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <SidebarModal />
           {/* Left: Logo / App Title */}
           <div className="flex items-center gap-2">

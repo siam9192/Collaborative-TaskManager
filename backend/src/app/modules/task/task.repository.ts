@@ -9,9 +9,9 @@ export type TaskWithInclude<T extends Prisma.TaskInclude> =
   }>;
 
 class TaskRepository {
-  private buildTasksWhere(
+  private buildTasksAndConditions(
     filterQuery: FilterQuery = {},
-  ): Prisma.TaskWhereInput {
+  ): Prisma.TaskWhereInput[] {
     const { searchTerm, ...otherFilters } = filterQuery;
 
     const andConditions: Prisma.TaskWhereInput[] = [];
@@ -37,9 +37,7 @@ class TaskRepository {
       andConditions.push(validOtherFilters);
     }
 
-    return {
-      ...(andConditions.length ? { AND: andConditions } : {}),
-    };
+    return andConditions;
   }
 
   private task = prisma.task;
@@ -99,11 +97,12 @@ class TaskRepository {
   ) {
     const { page, limit, skip, sortBy, sortOrder } = PaginationData;
 
-    const where = this.buildTasksWhere({
-      ...filterQuery,
-      assignedToId: userId,
-    });
-
+    const where = {
+      AND: this.buildTasksAndConditions({
+        ...filterQuery,
+        assignedToId: userId,
+      }),
+    };
     const data = await this.task.findMany({
       where,
       take: limit,
@@ -114,6 +113,7 @@ class TaskRepository {
       include: {
         creator: {
           select: {
+            id: true,
             name: true,
             profilePhoto: true,
             email: true,
@@ -144,7 +144,12 @@ class TaskRepository {
     PaginationData: PaginationData,
   ) {
     const { page, limit, skip, sortBy, sortOrder } = PaginationData;
-    const where = this.buildTasksWhere({ ...filterQuery, creatorId: userId });
+    const where = {
+      AND: this.buildTasksAndConditions({
+        ...filterQuery,
+        creatorId: userId,
+      }),
+    };
     const data = await this.task.findMany({
       where,
       take: limit,
@@ -155,6 +160,7 @@ class TaskRepository {
       include: {
         assignedTo: {
           select: {
+            id: true,
             name: true,
             profilePhoto: true,
             email: true,
@@ -185,10 +191,9 @@ class TaskRepository {
   ) {
     const { page, skip, limit } = paginationData;
 
-    const where:Prisma.TaskWhereInput = {
-      ...this.buildTasksWhere({
+    const where: Prisma.TaskWhereInput = {
+      AND: this.buildTasksAndConditions({
         ...filterQuery,
-        assignedToId: userId,
       }),
 
       OR: [
@@ -200,12 +205,14 @@ class TaskRepository {
         },
       ],
       dueDate: {
-      lt:new Date()
+        lt: new Date(),
       },
-      status:{
-        not:TaskStatus.Completed
-      }
+
+      status: {
+        not: TaskStatus.Completed,
+      },
     };
+
     const data = await this.task.findMany({
       where: where,
       skip,
@@ -213,6 +220,7 @@ class TaskRepository {
       include: {
         creator: {
           select: {
+            id: true,
             name: true,
             profilePhoto: true,
             email: true,
@@ -221,6 +229,7 @@ class TaskRepository {
         },
         assignedTo: {
           select: {
+            id: true,
             name: true,
             profilePhoto: true,
             email: true,
@@ -229,6 +238,8 @@ class TaskRepository {
         },
       },
     });
+
+    console.log(data);
     const totalResults = await this.task.count({
       where: where,
     });
@@ -246,7 +257,9 @@ class TaskRepository {
 
   async countTasksWithFilter(filter: FilterQuery) {
     return await this.task.count({
-      where: this.buildTasksWhere(filter),
+      where: {
+        AND: this.buildTasksAndConditions(filter),
+      },
     });
   }
 

@@ -1,9 +1,10 @@
 import { ClipboardList } from "lucide-react";
 import { Link } from "react-router-dom";
+import ThemeSwitchButton from "../ui/ThemeSwitchButton";
 
 function IntroPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen   px-6">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="text-center max-w-md">
         {/* Icon */}
         <div className="flex justify-center mb-4">
@@ -11,7 +12,7 @@ function IntroPage() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-4xl font-bold mb-3">Welcome to TaskFlow</h1>
+        <h1 className="text-2xl md:text-3xl lg::text-4xl font-bold mb-3">Welcome to TaskFlow</h1>
 
         {/* Description */}
         <p className=" mb-6">
@@ -30,6 +31,12 @@ function IntroPage() {
               Login
             </button>
           </Link>
+        </div>
+
+
+        {/* Theme switch  */}
+        <div className="size-fit absolute top-2 right-2">
+          <ThemeSwitchButton/>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
-import { NotificationCategory, NotificationType } from "@prisma/client";
-import notificationService from "../modules/notification/notification.service";
-import { TaskEvent } from "../types";
-import { emitToUser } from "./io.hepler";
+import { NotificationCategory, NotificationType } from '@prisma/client';
+import notificationService from '../modules/notification/notification.service';
+import { TaskEvent } from '../types';
+import { emitToUser } from './io.hepler';
 
 export function getAssignedUserChange(
   previous?: string | null,

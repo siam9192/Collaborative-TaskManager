@@ -31,60 +31,62 @@ class TaskService {
     };
   }
 
- async updateTask(
-  authUser: AuthUser,
-  taskId: string,
-  payload: UpdateTaskPayload,
-) {
-  //  Fetch task
-  const task = await taskRepository.findById(taskId);
-  if (!task) {
-    throw new AppError(httpStatus.NOT_FOUND, "Task not found");
-  }
-
-  //Authorization
-  const isCreator = task.creatorId === authUser.id;
-  const isAssignee = task.assignedToId === authUser.id;
-
-  if (!isCreator && !isAssignee) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You are not allowed to update this task",
-    );
-  }
-
-  // Assignment change validation
-  const assignedChange = getAssignedUserChange(task.assignedToId, payload.assignedToId);
-
-  if (assignedChange.changed && assignedChange.to) {
-    const exists = await userRepository.isExistById(assignedChange.to);
-    if (!exists) {
-      throw new AppError(httpStatus.NOT_FOUND, "Assigned user not found");
+  async updateTask(
+    authUser: AuthUser,
+    taskId: string,
+    payload: UpdateTaskPayload,
+  ) {
+    //  Fetch task
+    const task = await taskRepository.findById(taskId);
+    if (!task) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Task not found');
     }
+
+    //Authorization
+    const isCreator = task.creatorId === authUser.id;
+    const isAssignee = task.assignedToId === authUser.id;
+
+    if (!isCreator && !isAssignee) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        'You are not allowed to update this task',
+      );
+    }
+
+    // Assignment change validation
+    const assignedChange = getAssignedUserChange(
+      task.assignedToId,
+      payload.assignedToId,
+    );
+
+    if (assignedChange.changed && assignedChange.to) {
+      const exists = await userRepository.isExistById(assignedChange.to);
+      if (!exists) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Assigned user not found');
+      }
+    }
+
+    // Update task
+    const updatedTask = await taskRepository.updateById(taskId, payload);
+
+    //  Status audit log
+    if (task.status !== updatedTask.status) {
+      taskStatusAuditLogService.createLog({
+        taskId: updatedTask.id,
+        oldStatus: task.status,
+        newStatus: updatedTask.status,
+        changedById: authUser.id,
+      });
+    }
+
+    // Response
+    return {
+      data: updatedTask,
+      ...(assignedChange.changed && {
+        assigned: assignedChange,
+      }),
+    };
   }
-
-  // Update task
-  const updatedTask = await taskRepository.updateById(taskId, payload);
-
-  //  Status audit log
-  if (task.status !== updatedTask.status) {
-    taskStatusAuditLogService.createLog({
-      taskId: updatedTask.id,
-      oldStatus: task.status,
-      newStatus: updatedTask.status,
-      changedById: authUser.id,
-    });
-  }
-
-  // Response
-  return {
-    data: updatedTask,
-    ...(assignedChange.changed && {
-      assigned: assignedChange,
-    }),
-  };
-}
-
 
   async deleteTask(authUser: AuthUser, taskId: string) {
     const task = await taskRepository.findById(taskId);
@@ -142,7 +144,7 @@ class TaskService {
       filterQuery,
       calculatePagination(paginationOptions),
     );
-    result.data.map((_) => ({ ..._, isCreator: _.creatorId === authUser.id }));
+
     return result;
   }
 }

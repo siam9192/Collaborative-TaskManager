@@ -8,8 +8,7 @@ function Sidebar() {
     { label: "Home", icon: Home, path: "/" },
     { label: "Tasks", icon: ListChecks, path: "/tasks" },
     { label: "Edit Profile", icon: User, path: "/edit-profile" },
-    // { label: "Overdue", icon: AlertTriangle, path: "/tasks/overdue" },
-    // { label: "Teams", icon: Users, path: "/teams" },
+  
   ];
 
   const {mutate} = useUserLogoutMutation()
@@ -21,7 +20,6 @@ function Sidebar() {
         console.log(11)
         queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
          
-      
       }
     })
   }

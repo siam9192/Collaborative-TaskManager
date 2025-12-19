@@ -1,13 +1,19 @@
 import { Menu, X } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Sidebar from "../shared/Sidebar";
+import { useLocation } from "react-router-dom";
 
 function SidebarModal() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
+  const {pathname} = useLocation()
 
+  useEffect(()=>{
+    closeSidebar()
+  },[pathname])
+  
   return (
     <Fragment>
       <button

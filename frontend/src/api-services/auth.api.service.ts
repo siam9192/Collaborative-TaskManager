@@ -31,3 +31,34 @@ export async function userLogin(payload: UserLoginPayload) {
     throw new Error(message);
   }
 }
+
+
+export async function userLogout() {
+  try {
+    const res = await axiosInstance.post("/auth/logout");
+
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+
+    // Custom error message (backend message OR fallback)
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+
+    // Re-throw clean error
+    throw new Error(message);
+  }
+}
+
+export async function getNewAccessToken () {
+   try {
+  await axiosInstance.get("/auth/access-token");
+
+    return null
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+
+    throw new Error(message);
+  }
+}

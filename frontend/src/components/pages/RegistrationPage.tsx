@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import authValidation, { type UserRegisterFormValues } from "../../validations/auth.validation";
-import { userUserRegistrationMutation } from "../../query/services/auth.service";
+import { useUserRegistrationMutation } from "../../query/services/auth.service";
 import { toast } from "sonner";
 
 function RegistrationPage() {
@@ -14,7 +14,7 @@ function RegistrationPage() {
     resolver: zodResolver(authValidation.userRegistrationSchema),
   });
 
-  const { mutate, isPending } = userUserRegistrationMutation();
+  const { mutate, isPending } = useUserRegistrationMutation();
   const onSubmit = async (data: UserRegisterFormValues) => {
     mutate(data, {
       onSuccess: () => {

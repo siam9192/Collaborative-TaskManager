@@ -31,7 +31,7 @@ const ThemeSwitchButton: React.FC = () => {
       aria-label="Toggle Theme"
     >
       {theme === "light" ? (
-        <Moon size={20} className="text-blue-600 sm:text-gray-200" />
+        <Moon size={20} className="text-blue-600 sm:text-gray-600" />
       ) : (
         <Sun size={20} className="text-yellow-500 sm:text-yellow-400" />
       )}

@@ -1,4 +1,4 @@
-import { TaskStatus, type Task } from "../../types/task.type";
+import { TaskPriority, TaskStatus, type Task } from "../../types/task.type";
 import UpdateTaskModal from "../ui/UpdateTaskModal";
 
 import { useCurrentUserProviderContext } from "../../context/CurrentUserProviderContext";
@@ -12,7 +12,7 @@ function TaskCard({ task }: { task: Task }) {
   const isOverdue =
     new Date(task.dueDate || task.updatedAt) < new Date() && task.status !== TaskStatus.Completed;
 
-  const isOwner = task.creatorId === currentUser.id;
+  const isCreator = task.creatorId === currentUser.id;
   const createdAt = new Date(task.createdAt);
   const updatedAt = new Date(task.updatedAt);
   const dueDate = new Date(task.dueDate);
@@ -23,13 +23,13 @@ function TaskCard({ task }: { task: Task }) {
         <div className="flex justify-between items-start gap-2">
           <h3 className="text-lg font-semibold leading-tight">{task.title}</h3>
 
-          {isOverdue && <span className="text-warning gap-1">Overdue</span>}
+        
         </div>
 
         <p className="mt-2 text-sm opacity-70 line-clamp-2">{task.description}</p>
       </div>
 
-      <div className="mt-4 flex justify-between items-center text-sm">
+      <div className="mt-4 flex flex-col-reverse gap-4 lg:gap-0 lg:flex-row lg:justify-between lg:items-center text-sm">
         {/* Assignee */}
         {task.assignedTo ? (
           <div>
@@ -48,28 +48,41 @@ function TaskCard({ task }: { task: Task }) {
         ) : (
           <div></div>
         )}
-
+ <div className="flex gap-2 items-center">
+  {
+    isOverdue ? <span className=" badge badge-warning">Overdue</span>:null
+  }
+  {/* Status */}
+     <span
+  className={`badge badge-outline font-medium    ${task.status === TaskStatus.To_Do && "badge-ghost"}
+    ${task.status === TaskStatus.In_Progress && "badge-warning"}
+    ${task.status === TaskStatus.Review && "badge-info"}
+    ${task.status === TaskStatus.Completed && "badge-success"}`}
+>
+          {task.status.replace('_',' ')}
+        </span>
         {/* Priority */}
         <span
           className={`
             badge badge-outline font-medium
-            ${task.priority === "Urgent" && "badge-error"}
-            ${task.priority === "High" && "badge-warning"}
-            ${task.priority === "Medium" && "badge-info"}
-            ${task.priority === "Low" && "badge-success"}
+            ${task.priority === TaskPriority.Urgent && "badge-error"}
+            ${task.priority === TaskPriority.High && "badge-warning"}
+            ${task.priority === TaskPriority.Medium && "badge-info"}
+            ${task.priority === TaskPriority.Low && "badge-success"}
           `}
         >
           {task.priority}
         </span>
+ </div>
       </div>
 
-      {/* ---------- Footer ---------- */}
+      {/*  Footer  */}
       <div className="mt-4 pt-3 border-t border-base-200 flex flex-col md:justify-between gap-2 text-xs text-base-content/60">
         {/* Creator */}
         <span>
           Created by{" "}
           <span className="font-medium text-base-content">
-            {task.creatorId === currentUser.id ? "You" : `@${task.creator.username}`}
+            {isCreator ? "You" : `@${task.creator.username}`}
           </span>
         </span>
 
@@ -86,8 +99,8 @@ function TaskCard({ task }: { task: Task }) {
           </span>
 
           <span>
-            <span className="font-medium">Due:</span> {dueDate.toLocaleDateString()} •{" "}
-            {dueDate.toLocaleTimeString()}
+            <span className="font-medium">Due:</span> {dueDate.toLocaleDateString()}
+       
           </span>
         </div>
       </div>
@@ -96,7 +109,7 @@ function TaskCard({ task }: { task: Task }) {
       <div className="mt-2  right-3 flex justify-end gap-1 ">
         <UpdateTaskModal task={task} />
 
-        {isOwner && <TaskDeleteButton id={task.id} />}
+        {isCreator && <TaskDeleteButton id={task.id} />}
       </div>
     </div>
   );

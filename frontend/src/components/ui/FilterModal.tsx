@@ -30,7 +30,7 @@ function FilterModal({ onApply }: FilterModalProps) {
         className="btn btn-sm bg-primary text-white"
         onClick={() => (document.getElementById("filter_modal") as HTMLDialogElement).showModal()}
       >
-        Filter By
+        Filter 
       </button>
 
       {/* Modal */}

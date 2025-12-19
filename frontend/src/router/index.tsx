@@ -31,7 +31,7 @@ function Router() {
           {/* Auth routes */}
           <Route path="login" element={<ProtectRoute access="guest" ><LoginPage /></ProtectRoute>} />
           <Route path="register" element={<ProtectRoute access="guest"><RegistrationPage/></ProtectRoute>} />
-          <Route path="intro" element={<IntroPage />} />
+          <Route path="intro" element={<ProtectRoute access="guest"><IntroPage /></ProtectRoute>} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -9,8 +9,9 @@ interface Props {
 }
 
 export default function ProtectRouted({ access, children, redirectTo }: Props) {
-  const { data: user, isLoading, isPending } = useCurrentUserProviderContext();
-
+  const { data,isLoading, isPending,isError } = useCurrentUserProviderContext();
+  const user = isError ? null :data?.data 
+ 
   if (isLoading || isPending) {
     return (
       <div className="flex items-center justify-center min-h-screen">

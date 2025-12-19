@@ -1,5 +1,7 @@
-import { Home, ListChecks, Settings, LogOut, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Home, ListChecks, LogOut, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useUserLogoutMutation } from "../../query/services/auth.service";
+import { queryClient } from "../../App";
 
 function Sidebar() {
   const menuItems = [
@@ -9,6 +11,21 @@ function Sidebar() {
     // { label: "Overdue", icon: AlertTriangle, path: "/tasks/overdue" },
     // { label: "Teams", icon: Users, path: "/teams" },
   ];
+
+  const {mutate} = useUserLogoutMutation()
+  const navigate = useNavigate()
+
+  const logout = ()=>{
+    mutate(undefined,{
+      onSuccess:()=>{
+        console.log(11)
+        queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
+         
+      
+      }
+    })
+  }
+
 
   return (
     <aside className=" bg-base-100 dark:bg-base-200 border-r border-base-300 flex flex-col h-full">
@@ -37,11 +54,7 @@ function Sidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-base-300 space-y-2">
-        <button className="btn btn-ghost btn-sm w-full justify-start gap-3">
-          <Settings size={18} />
-          Settings
-        </button>
-        <button className="btn btn-ghost btn-sm w-full justify-start gap-3 text-error">
+        <button onClick={logout} className="btn btn-ghost btn-sm w-full justify-start gap-3 text-error">
           <LogOut size={18} />
           Logout
         </button>

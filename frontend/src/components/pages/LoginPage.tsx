@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import authValidation from "../../validations/auth.validation";
-import { userUserLoginMutation } from "../../query/services/auth.service";
+import { useUserLoginMutation } from "../../query/services/auth.service";
 import { toast } from "sonner";
 import { queryClient } from "../../App";
 
@@ -18,17 +18,15 @@ function LoginPage() {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(authValidation.userLoginSchema),
   });
-  const { mutate } = userUserLoginMutation();
-  const navigate = useNavigate();
+  const { mutate } = useUserLoginMutation();
+  
   const onSubmit = (data: LoginFormValues) => {
     mutate(data, {
       onSuccess: () => {
         toast.success("Login successful");
         reset();
         queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
-        setTimeout(() => {
-          navigate("/");
-        }, 5000);
+      
       },
       onError: (err) => {
         toast.error(err.message);

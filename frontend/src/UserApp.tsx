@@ -19,6 +19,7 @@ function UserApp() {
     queryClient.invalidateQueries({
       queryKey: ["getUserNotificationsMetadata"],
     });
+   
   };
 
 
@@ -29,6 +30,9 @@ function UserApp() {
 
   function invalidateTasks() {
     queryClient.invalidateQueries({ queryKey: ["tasks"] });
+     queryClient.invalidateQueries({
+      queryKey: ["getUserGlobalMetadata"],
+    });
   }
 
   return () => {

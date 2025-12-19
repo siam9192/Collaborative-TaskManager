@@ -7,7 +7,6 @@ const context = createContext<UseQueryResult<IResponse<CurrentUser>, unknown> | 
 
 function CurrentUserProviderContext({ children }: { children: ReactNode }) {
   const queryResult = userGetCurrentUserQuery();
-
   return <context.Provider value={queryResult}>{children}</context.Provider>;
 }
 

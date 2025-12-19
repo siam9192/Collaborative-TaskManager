@@ -28,10 +28,10 @@ const createTaskSchema = z.object({
   dueDate: z.string("Due date is required").refine(
     (val) => {
       const date = new Date(val);
-      return !isNaN(date.getTime()) && date.getTime() > Date.now();
+      return !isNaN(date.getTime())
     },
     {
-      message: "Due date must be a valid future date",
+      message: "Invalid due date",
     },
   ),
   priority: z.nativeEnum(TaskPriority),

@@ -37,10 +37,12 @@ function UpdateTaskModal({ task }: Props) {
       description: task.description,
       priority: task.priority,
       status: task.status,
-      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : "",
-      assignedToId: task.assignedToId ?? "",
+      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 10) : "",
+      assignedToId: task.assignedToId ?? null,
     },
   });
+
+ 
 
   const [isAssignDialog, setIsAssignDialog] = useState(false);
   const [assignUser, setAssignUser] = useState<AssignUser | null>(task.assignedTo as AssignUser);
@@ -91,7 +93,7 @@ function UpdateTaskModal({ task }: Props) {
           <h3 className="font-bold text-lg mb-4">Update Task</h3>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            {/* ---------- Title ---------- */}
+            {/*  Title  */}
             <div>
               <label className="label font-medium">Title</label>
               <input className="input input-bordered w-full" {...register("title")} />
@@ -101,7 +103,7 @@ function UpdateTaskModal({ task }: Props) {
               </div>
             </div>
 
-            {/* ---------- Description ---------- */}
+            {/* Description  */}
             <div>
               <label className="label font-medium">Description</label>
               <textarea
@@ -116,18 +118,18 @@ function UpdateTaskModal({ task }: Props) {
               </div>
             </div>
 
-            {/* ---------- Due Date ---------- */}
+            {/* Due Date  */}
             <div>
               <label className="label font-medium">Due Date</label>
               <input
-                type="datetime-local"
+                type="date"
                 className="input input-bordered w-full"
                 {...register("dueDate")}
               />
               {errors.dueDate && <p className="text-error text-sm">{errors.dueDate.message}</p>}
             </div>
 
-            {/* ---------- Priority & Status ---------- */}
+            {/*  Priority & Status  */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="label font-medium">Priority</label>
@@ -152,7 +154,7 @@ function UpdateTaskModal({ task }: Props) {
               </div>
             </div>
 
-            {/* ---------- Assign To ---------- */}
+            {/*  Assign To  */}
             {task.assignedToId !== user.id ? (
               <div>
                 <label className="label font-medium">Assign To (optional)</label>
@@ -202,7 +204,7 @@ function UpdateTaskModal({ task }: Props) {
               </div>
             ) : null}
 
-            {/* ---------- Actions ---------- */}
+            {/*  Actions  */}
             <div className="modal-action">
               <button type="button" className="btn btn-ghost" disabled={isPending} onClick={close}>
                 Cancel

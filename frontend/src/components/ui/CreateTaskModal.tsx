@@ -75,7 +75,7 @@ function CreateTaskModal() {
           <h3 className="font-bold text-lg mb-4">Create New Task</h3>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            {/* ---------- Title ---------- */}
+            {/*  Title  */}
             <div>
               <label className="label font-medium">Title</label>
               <input
@@ -94,7 +94,7 @@ function CreateTaskModal() {
               </div>
             </div>
 
-            {/* ---------- Description ---------- */}
+            {/*  Description  */}
             <div>
               <label className="label font-medium">Description</label>
               <textarea
@@ -115,18 +115,18 @@ function CreateTaskModal() {
               </div>
             </div>
 
-            {/* ---------- Due Date ---------- */}
+            {/*  Due Date  */}
             <div>
               <label className="label font-medium">Due Date</label>
               <input
-                type="datetime-local"
+                type="date"
                 className={`input input-bordered w-full ${errors.dueDate ? "input-error" : ""}`}
                 {...register("dueDate")}
               />
               <p className="text-xs text-error mt-1">{errors.dueDate?.message}</p>
             </div>
 
-            {/* ---------- Priority & Status ---------- */}
+            {/*  Priority & Status  */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="label font-medium">Priority</label>
@@ -161,7 +161,7 @@ function CreateTaskModal() {
               </div>
             </div>
 
-            {/* ---------- Assign To ---------- */}
+            {/*  Assign To  */}
             <div>
               <label className="label font-medium">Assign To (optional)</label>
               {!assignUser ? (
@@ -209,7 +209,7 @@ function CreateTaskModal() {
               <p className="text-xs text-error mt-1">{errors.assignedToId?.message}</p>
             </div>
 
-            {/* ---------- Actions ---------- */}
+            {/*  Actions  */}
             <div className="modal-action">
               <button type="button" className="btn btn-ghost" disabled={isPending} onClick={close}>
                 Cancel
